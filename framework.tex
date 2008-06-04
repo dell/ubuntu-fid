@@ -200,10 +200,10 @@ There are also two examples of software enablement:
 The most important thing about debugging is identifying which phase of the installation needs to be debugged.  The methodology used for each can vary depending on the problem you are trying to solve.
 
 \subsection{Boot problems}
-If you have an underlying kernel problem, you will likely get a panic directly upon boot.  If you don't, you may be dropped down to a console at which point you can look at \texttt{casper.log} in the current directory, or the output of \texttt{dmesg} for more information.  If you are discovering problems during this phase, it's important to file bugs on these issues early as they are most critical and may require a significant amount of time to fix.
+If you have an underlying kernel problem, you will likely get a panic directly upon boot.  If you don't, you may be dropped down to a console at which point you can look at the output of \texttt{dmesg} for more information.  If you are discovering problems during this phase, it's important to file bugs on these issues early as they are most critical and may require a significant amount of time to fix.
 
 \subsection{Preboot phase}
-If the preboot phase is failing, you will be dropped to a console.  Debugging this can be done by adding echo statements to the scripts and looking at the output of casper.log.  Alternatively, you can handle debugging directly in your \texttt{FAIL-SCRIPT}.
+If the preboot phase is failing, you will be dropped to a console.  Debugging this can be done by adding echo statements to the scripts and looking at the output of \texttt{casper.log}.  Alternatively, you can handle debugging directly in your \texttt{FAIL-SCRIPT}.
 
 \subsection{Install phase}
 Debugging the install phase is likely to be the most difficult because the problems can be either in the implementation of the preseed file or a bug directly in the installer.  The installer will always place debug output in \texttt{/var/log/syslog} and possibly \texttt{/var/log/installer/debug} depending on the type of crash you encounter.
@@ -215,21 +215,17 @@ A useful debug strategy is to boot up a live disk and attempt to simulate an ins
 \texttt{cat oem.seed | sudo debconf-set-selections}
 \\
 \\
-Once the preseed file is loaded, you can launch Ubiquity with either the automatic-ubiquity or noninteractive frontends in addition to \textbf{debug} mode.
+Once the preseed file is loaded, you can launch Ubiquity in \textbf{debug} mode.
 \\
 \\
-\texttt{ubiquity -d noninteractive} or \texttt{ubiquity -d --automatic}
+\texttt{ubiquity -d noninteractive}
 \\
 \\
-The logging will be much more verbose in \texttt{/var/log/installer/debug}.
-\\
-\\
-Be sure that if you have any bugs about the installer to file to include your oem.seed in the bug and any of the installation logs that you can provide.
+The logging will be much more verbose in \texttt{/var/log/installer/debug}.  Be sure that if you have any bugs about the installer to file to include your oem.seed in the bug and any of the installation logs that you can provide.
 
 \subsection{Post Install phase}
 The post install phase would be most likely to have problems due to unknown interactions of different team's post installation scripts.
-Debugging can be performed interactively or after a failed installation by looking at logs.
-The post install phase will log all activity to \texttt{/var/log/installer/chroot.sh.log} on the resultant system.
+Debugging can be performed interactively or retroactively by looking at logs.  The post install phase will log all activity to \texttt{/var/log/installer/chroot.sh.log} on the resultant system.
 \\
 \\
 You can also interactively prevent each script from launching one by one by creating a file \texttt{/tmp/superhalt.flg} on the live filesystem.  This will create a flag, \texttt{/tmp/halt.flg} before each script is ran.  When you want the next script to launch, just remove \texttt{/tmp/halt.flg}.  If you would like all of the scripts to continue on, remove both \texttt{/tmp/superhalt.flg} and \texttt{/tmp/halt.flg}

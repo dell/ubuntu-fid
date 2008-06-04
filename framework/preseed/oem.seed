@@ -1,0 +1,156 @@
+#
+#       <oem.seed>
+#
+#       Sets all of the defaults for the Ubuntu installation
+#        * Keyboard
+#        * Locale
+#        * Time zone
+#        * Mirrors
+#        * Language pack inclusion
+#        * Hard drive layout
+#        * Framework enablement
+#
+#       Copyright 2008 Dell Inc.
+#           Mario Limonciello <Mario_Limonciello@Dell.com>
+#           Hatim Amro <Hatim_Amro@Dell.com>
+#           Michael E Brown <Michael_E_Brown@Dell.com>
+#
+#       This program is free software; you can redistribute it and/or modify
+#       it under the terms of the GNU General Public License as published by
+#       the Free Software Foundation; either version 2 of the License, or
+#       (at your option) any later version.
+#
+#       This program is distributed in the hope that it will be useful,
+#       but WITHOUT ANY WARRANTY; without even the implied warranty of
+#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#       GNU General Public License for more details.
+#
+#       You should have received a copy of the GNU General Public License
+#       along with this program; if not, write to the Free Software
+#       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+#       MA 02110-1301, USA.
+
+### Localization
+
+ # Locale sets language and country.
+  d-i debian-installer/locale string en_US.UTF-8
+
+ # Keyboard selection.
+  d-i console-setup/layoutcode string us
+  d-i console-setup/variantcode string
+
+ # Language
+ d-i languagechooser/language-name string English
+
+### Clock and time zone setup
+
+ # Controls whether or not the hardware clock is set to UTC.
+  d-i clock/setup/utc boolean false
+
+ # You may set this to any valid setting for $TZ; see the contents of
+ # /usr/share/zoneinfo/ for valid values.
+  d-i time/zone string UTC
+
+### Network configuration
+
+ # netcfg will choose an interface that has link if possible. This makes it
+ # skip displaying a list if there is more than one interface.
+  d-i netcfg/choose_interface select auto
+
+ # If you have a slow dhcp server and the installer times out waiting for
+ # it, this might be useful.
+  d-i netcfg/dhcp_timeout string 5
+
+ # Any hostname and domain names assigned from dhcp take precedence over
+ # values set here. However, setting the values still prevents the questions
+ # from being shown, even if values come from dhcp.
+  d-i netcfg/get_hostname string dell-desktop
+  d-i netcfg/get_domain string example.com
+
+### Mirror settings
+
+ # default mirror for install
+  d-i mirror/country string us
+  d-i mirror/http/hostname string archive.ubuntu.com
+  d-i mirror/http/directory string /ubuntu
+  d-i mirror/http/proxy string
+
+ # apt stuff (prevent install-time hang)
+  d-i apt-setup/use_mirror boolean true
+  d-i apt-setup/security_host string
+
+### Partitioning
+
+ # We are letting partman pick the largest amount of space
+  d-i partman-auto/init_automatically_partition select biggest_free
+
+ # Install to the first boot drive
+  d-i partman-auto/disk string /dev/disk/by-id/edd-int13_dev80
+
+ # Provide an expert recipe because the default recipe will make all
+ # logical partitions
+  d-i partman-auto/expert_recipe string \
+                                        \
+    dell ::                             \
+                                        \
+        500 10000 1000000 ext3          \
+        $primary{ }                     \
+        method{ format }                \
+        format{ }                       \
+        use_filesystem{ }               \
+        filesystem{ ext3 }              \
+        mountpoint{ / } .               \
+                                        \
+        64 512 100% linux-swap          \
+        method{ swap }                  \
+        format{ }                       \
+        .
+
+### Boot loader installation
+
+ # Don't install to the MBR, we install to PBR instead
+  d-i grub-installer/only_debian boolean false
+  d-i grub-installer/with_other_os boolean false
+
+ # Set our recovery partition active in case of power failure
+ # Grub in 8.04 and later can speak EDD for building it's drive list
+  d-i grub-installer/bootdev  string (hd0,2)
+
+ # Don't let Ubiquity make our install-to partition active.  We'll do that
+ # Ourselves later after the install is all done.
+  d-i grub-installer/make_active boolean false
+
+### User selection/password for OEM
+
+ # This gets deleted by oem-config-prepare, so it doesnt matter...
+  d-i passwd/user-fullname string OEM
+  d-i passwd/username string oem
+  d-i passwd/user-password password password
+  d-i passwd/user-password-again password password
+
+ # enable oem mode
+  d-i oem-config/enable boolean true
+
+### Package selection
+
+ # General stuff
+  tasksel tasksel/first multiselect ubuntu-desktop
+  d-i finish-install/reboot_in_progress note
+  ubiquity ubiquity/summary note
+
+ # Preload language packages
+ # These are all included on the DVD already in a preinstalled format.
+ # We *save* time by letting them all stay preinstalled
+  d-i pkgsel/language-packs string aa ak ace af am an ang ar as ast az be ber bg bn bo br bs bua byn ca ceb co cs csb cv cy da de dsb dv dz el en eo es et eu fa fi fil fo fr fur fy ga gd gl gn grc gu gv he hi hil hr ht hu hy ia id ii io is it ja jbo jv ka kab kk km kn ko kok ku kw ky la lb lg li ln lo lt lv mai mg mi mk ml mn mnc mr ms mt mus my nap nb nds ne nl nn no nr nso oc om or pa pap pl ps pt qu rm ro rom ru rw sa sc sco sd se si sk sl so sq sr ss st sv sw ta te tet tg th ti tk tl tlh tn tr ts tt ug uk ur uz ve vi wa wo xh yi yo zh zu zza za
+
+ # if we are using a CD, then only activate this one:
+  #d-i pkgsel/language-packs string en
+
+### Running custom commands during the installation
+
+ # This first command is run as early as possible, just after
+ # preseeding is read.
+  d-i preseed/early_command string /root/cdrom/scripts/bootstrap.sh
+  ubiquity ubiquity/success_command string /cdrom/scripts/chroot.sh success
+  ubiquity ubiquity/failure_command string /cdrom/scripts/chroot.sh failure
+  ubiquity ubiquity/reboot boolean true

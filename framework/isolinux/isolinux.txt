@@ -1,0 +1,9 @@
+
+This is the Ubuntu Live Vendor Reinstallation CD.
+
+For the default Vendor Reinstallation system, press ENTER.
+
+For boot into Live CD image, type 'live' and then press ENTER.
+
+To boot the the hard drive, type 'hd' and then press ENTER.
+

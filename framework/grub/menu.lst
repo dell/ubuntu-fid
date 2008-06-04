@@ -1,0 +1,40 @@
+;       <menu.lst>
+;
+;       Provides a GRUB menu for the OS recovery partition
+;
+;       Copyright 2008 Dell Inc.
+;           Mario Limonciello <Mario_Limonciello@Dell.com>
+;           Hatim Amro <Hatim_Amro@Dell.com>
+;           Michael E Brown <Michael_E_Brown@Dell.com>
+;
+;       This program is free software; you can redistribute it and/or modify
+;       it under the terms of the GNU General Public License as published by
+;       the Free Software Foundation; either version 2 of the License, or
+;       (at your option) any later version.
+;
+;       This program is distributed in the hope that it will be useful,
+;       but WITHOUT ANY WARRANTY; without even the implied warranty of
+;       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;       GNU General Public License for more details.
+;
+;       You should have received a copy of the GNU General Public License
+;       along with this program; if not, write to the Free Software
+;       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+;       MA 02110-1301, USA.
+;
+; vim:tw=0:noai
+
+; Note: REINSTALL parameter is used by script to add CONFIRMATION PROMPT for reinstall. Do not add this parameter for factory...
+title Recovery Mode -- Automatically reinstall and erase hard drive
+  root (hd0,1)
+  kernel /casper/vmlinuz boot=casper edd=on preseed/file=/cdrom/preseed/oem.seed noninteractive noprompt splash quiet REINSTALL
+  initrd /casper/initrd.gz
+
+title Recovery Mode -- Boot recovery Live Image (Manual Reinstall)
+  root (hd0,1)
+  kernel /casper/vmlinuz boot=casper edd=on preseed/file=/cdrom/preseed/ubuntu.seed
+  initrd /casper/initrd.gz
+
+title Go back to normal Hard Drive boot
+  rootnoverify (hd0,2)
+  chainloader +1

@@ -1,5 +1,7 @@
 #
-#       <oem.seed>
+#       <dell.seed>
+#
+#       Dell Ubuntu 8.10 preseed file used for FI installs
 #
 #       Sets all of the defaults for the Ubuntu installation
 #        * Keyboard

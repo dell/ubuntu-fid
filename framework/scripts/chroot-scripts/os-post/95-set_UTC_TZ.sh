@@ -1,8 +1,13 @@
 #!/bin/sh
 #
-#       <fifuncs>
+#       <95-set_UTC_TZ.sh>
 #
-#       Common functions that can be used for postinstall (chroot) scripts
+#      This Script will run only once -AND-
+#       Will be removed by the SUCCESS script
+
+#       This script will update Local Time To UTC(GMT)
+#       The offsets in the dictionary below were lifted
+#       from the file tztable.xpe used by our sister group.
 #
 #       Copyright 2008 Dell Inc.
 #           Mario Limonciello <Mario_Limonciello@Dell.com>
@@ -24,23 +29,17 @@
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
 
-wd=""$1""
 
-screenmsg() {
-    echo $* > /dev/tty1 2>&1
-}
+# *********** Warning ***************
+# the time offset for ICC tz_offset.py was adjusted
+# from 5:30 to 5
+# ==== Do we need to change this???
 
-IFHALT() {
-    if [ -f /$wd/tmp/superhalt.flg ]; then
-        touch /tmp/halt.flg
-        screenmsg "Halting ---> "$1
-        set +x
-        while [ -f /tmp/halt.flg ]; do
-            sleep 2
-        done
-        set -x
-    else
-        screenmsg "Message --->: $1"
-    fi
-}
 
+# Copy /mnt/misc/tz_offset.py to /etc/init.d/tz_offset.py
+cp -f /mnt/misc/tz_offset.py /etc/init.d/tz_offset.py
+cp -f /mnt/misc/run-tz-fix /etc/init.d/run-tz-fix
+chmod +x /etc/init.d/tz_offset.py
+chmod +x /etc/init.d/run-tz-fix
+# link it to /etc/rc2.d/S02_force_utc
+ln -s /etc/init.d/run-tz-fix /etc/rc2.d/S02_force_utc

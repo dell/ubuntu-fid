@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 #       <80-install-debs.sh>
 #

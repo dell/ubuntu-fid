@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 #       <60-fix-apt-source.sh>
 #

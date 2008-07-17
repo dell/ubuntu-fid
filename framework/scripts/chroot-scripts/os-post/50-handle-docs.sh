@@ -29,10 +29,10 @@
 IFHALT "Copying Vendor Documents..."
 
 if [ -d /mnt/docs ]; then
-        mkdir -p /usr/share/doc/VENDOR
-    cp -a /mnt/docs/* /usr/share/doc/VENDOR
+        mkdir -p /usr/share/doc/dell
+    cp -a /mnt/docs/* /usr/share/doc/dell
     [ ! -d "/etc/skel/Desktop" ] && mkdir -p /etc/skel/Desktop
-    ln -s /usr/share/doc/VENDOR /etc/skel/Desktop
+    ln -s /usr/share/doc/dell /etc/skel/Desktop
 fi
 
 IFHALT "Done with copying vendor documents..."

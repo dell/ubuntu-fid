@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 #       <99-active-partition.sh>
 #

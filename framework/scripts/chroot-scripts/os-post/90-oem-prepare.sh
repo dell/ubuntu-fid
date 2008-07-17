@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 #       <90-oem-prepare.sh>
 #

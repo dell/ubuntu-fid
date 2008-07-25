@@ -64,7 +64,7 @@ else
         done
     done
     echo "got install device ($label), continuing..."
-    export INSTALL_PART=$(readlink -f $devpath/$label)
+    export INSTALL_PART=/dev/disk/by-label/$(readlink $devpath/$label)
 fi
 
 export BOOT_PART=${INSTALL_PART%%[0-9]*}$BOOT_PART_NUM

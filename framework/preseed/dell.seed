@@ -41,9 +41,6 @@
   d-i console-setup/layoutcode string us
   d-i console-setup/variantcode string
 
- # Language
- d-i languagechooser/language-name string English
-
 ### Clock and time zone setup
 
  # Controls whether or not the hardware clock is set to UTC.

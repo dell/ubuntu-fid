@@ -29,7 +29,7 @@
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
 
-. /mnt/scripts/chroot-scripts/fifuncs ""
+. /cdrom/scripts/chroot-scripts/fifuncs ""
 
 set -x
 set -e
@@ -39,11 +39,11 @@ trap 'echo Command FAILED: $i' ERR
 echo "in $0"
 
 sync
-[ -f /mnt/superhalt.flg ] && touch /tmp/superhalt.flg
+[ -f /cdrom/superhalt.flg ] && touch /tmp/superhalt.flg
 sync
 
 IFHALT "Chroot-scripts execution start..."
-for d in /mnt/scripts/chroot-scripts/os-pre /mnt/scripts/chroot-scripts/fish /mnt/scripts/chroot-scripts/os-post
+for d in /cdrom/scripts/chroot-scripts/os-pre /cdrom/scripts/chroot-scripts/fish /cdrom/scripts/chroot-scripts/os-post
 do
     IFHALT "Executing Scripts in DIR: $d"
     for i in $d/*.sh $d/*.py;

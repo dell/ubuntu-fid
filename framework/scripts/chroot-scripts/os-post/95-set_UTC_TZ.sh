@@ -36,9 +36,9 @@
 # ==== Do we need to change this???
 
 
-# Copy /mnt/misc/tz_offset.py to /etc/init.d/tz_offset.py
-cp -f /mnt/misc/tz_offset.py /etc/init.d/tz_offset.py
-cp -f /mnt/misc/run-tz-fix /etc/init.d/run-tz-fix
+# Copy /cdrom/misc/tz_offset.py to /etc/init.d/tz_offset.py
+cp -f /cdrom/misc/tz_offset.py /etc/init.d/tz_offset.py
+cp -f /cdrom/misc/run-tz-fix /etc/init.d/run-tz-fix
 chmod +x /etc/init.d/tz_offset.py
 chmod +x /etc/init.d/run-tz-fix
 # link it to /etc/rc2.d/S02_force_utc

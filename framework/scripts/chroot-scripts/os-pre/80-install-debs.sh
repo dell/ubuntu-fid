@@ -23,11 +23,12 @@
 #       along with this program; if not, write to the Free Software
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
-. /mnt/scripts/chroot-scripts/fifuncs ""
+
+. /cdrom/scripts/chroot-scripts/fifuncs ""
 
 IFHALT "Installing debs from debs/main"
 
-if ls /mnt/debs/main/*.deb > /dev/null 2>&1; then
-    dpkg -i /mnt/debs/main/*.deb
+if ls /cdrom/debs/main/*.deb > /dev/null 2>&1; then
+    dpkg -i /cdrom/debs/main/*.deb
 fi
 

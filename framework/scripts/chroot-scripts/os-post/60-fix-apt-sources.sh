@@ -22,12 +22,12 @@
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
 
-. /mnt/scripts/chroot-scripts/fifuncs ""
+. /cdrom/scripts/chroot-scripts/fifuncs ""
 
 IFHALT "Fixing apt sources..."
 
 # comment out cdrom lines
 perl -p -i -e 's/^(deb cdrom)/## \1/;' /etc/apt/sources.list
 
-echo "deb http://ppa.launchpad.net/dell-team/ubuntu hardy main" >> /etc/apt/sources.list
-echo "deb-src http://ppa.launchpad.net/dell-team/ubuntu hardy main" >> /etc/apt/sources.list
+echo "deb http://ppa.launchpad.net/dell-team/ubuntu intrepid main" >> /etc/apt/sources.list
+echo "deb-src http://ppa.launchpad.net/dell-team/ubuntu intrepid main" >> /etc/apt/sources.list

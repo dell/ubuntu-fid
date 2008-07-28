@@ -60,7 +60,7 @@ mount --bind /dev /target/dev
 # re-enable the cdrom for postinstall
 sed -i 's/^#deb\ cdrom/deb\ cdrom/' /target/etc/apt/sources.list
 
-chroot /target /mnt/scripts/chroot-scripts/run_chroot
+chroot /target /cdrom/scripts/chroot-scripts/run_chroot
 
 umount /target/cdrom
 umount /target/proc

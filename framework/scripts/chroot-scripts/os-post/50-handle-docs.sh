@@ -24,13 +24,13 @@
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
 
-. /mnt/scripts/chroot-scripts/fifuncs ""
+. /cdrom/scripts/chroot-scripts/fifuncs ""
 
 IFHALT "Copying Vendor Documents..."
 
-if [ -d /mnt/docs ]; then
+if [ -d /cdrom/docs ]; then
         mkdir -p /usr/share/doc/dell
-    cp -a /mnt/docs/* /usr/share/doc/dell
+    cp -a /cdrom/docs/* /usr/share/doc/dell
     [ ! -d "/etc/skel/Desktop" ] && mkdir -p /etc/skel/Desktop
     ln -s /usr/share/doc/dell /etc/skel/Desktop
 fi

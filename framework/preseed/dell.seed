@@ -80,6 +80,9 @@
 
 ### Partitioning
 
+ # We are doing a recovery from a hard drive, don't unmount partitions
+  d-i ubiquity/partman-skip-unmount boolean true
+
  # We are letting partman pick the largest amount of space
   d-i partman-auto/init_automatically_partition select biggest_free
 

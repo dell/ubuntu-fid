@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# Run tz_offset.py to fix the TZ adjust issue
+/usr/bin/python /etc/init.d/tz_offset.py
+
+# need to remove ThySelf here
+rm -rf /etc/init.d/run-tz-fix

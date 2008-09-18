@@ -4,6 +4,6 @@
 
 IFHALT "Run flashplayer-installer..."
 
-. /cdrom/scripts/chroot-scripts/flashplayer-installer
+. /cdrom/misc/flash/flashplayer-installer
 
 IFHALT "Done with  flashplayer-installer..."

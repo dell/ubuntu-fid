@@ -26,7 +26,7 @@
 
 . /cdrom/scripts/chroot-scripts/fifuncs ""
 
-IFHALT "Installing debs from debs/main"
+IFHALT "Installing dkms"
 
 apt-get install dkms -y
 

@@ -18,7 +18,7 @@ PATH=.:/bin:/usr/bin:/usr/local/bin:/sbin:$PATH
 export PATH
 
 # Get the path of this script
-cwd=`dirname $0`
+cwd=/cdrom/misc/flash
 
 # Minimum glibc
 MIN_GLIBCMAJOR=2

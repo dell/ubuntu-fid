@@ -35,7 +35,7 @@ if grep -q DVDBOOT /proc/cmdline; then
     dd if=/root/cdrom/mbr.bin of=$BOOTDEV
 
     # need to copy /dev files into chroot
-    find ${BOOTDEV}* | cpio -pdv /root
+    cp /dev /root -R
 
     # re-read partition table
     chroot /root/ sfdisk -R $BOOTDEV
@@ -49,7 +49,7 @@ if grep -q DVDBOOT /proc/cmdline; then
     echo 0,0,0 | chroot /root sfdisk -N3 ${BOOTDEV} --force  || :
 
     # recopy dev files in case they changed (yes, this can happen)
-    find ${BOOTDEV}* | cpio -pdv /root
+    cp /dev /root -R
 
     # restore file contents of UP
     cat /root/cdrom/upimg.bin | gzip -d -c | dd of=${BOOTDEV}${UP_PART_NUM}
@@ -58,8 +58,7 @@ if grep -q DVDBOOT /proc/cmdline; then
     mkdir /tmp/mnt
     chroot /root mkfs.msdos -n install ${BOOTDEV}${RP_PART_NUM}
     mount -t vfat ${BOOTDEV}${RP_PART_NUM} /tmp/mnt
-    cd /root/cdrom/
-    find grub | cpio -pdv /tmp/mnt
+    cp /root/cdrom/grub /tmp/mnt -R
 
     #add a bootloader to recovery partition
     cd /
@@ -73,8 +72,7 @@ EOF
     chroot /root sfdisk -A${RP_PART_NUM} ${BOOTDEV}
 
     #Copy files into recovery partition
-    cd /root/cdrom/
-    find . | cpio -pdv /tmp/mnt
+    cp /root/cdrom/ /tmp/mnt -R
 
     #create a new UUID for the partition we
     #are dropping down to allow the user to

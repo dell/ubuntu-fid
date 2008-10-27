@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# Remove some of the default files intended for WW only
+[ -f /usr/share/dell/DELL/Hardware_Support_Information.pdf ] && rm -rf /usr/share/dell/DELL/Hardware_Support_Information.pdf

@@ -133,6 +133,7 @@
 
  # enable oem mode
   d-i oem-config/enable boolean true
+  d-i oem-config/id string Dell Inc.
 
 ### Package selection
 
@@ -140,6 +141,9 @@
   tasksel tasksel/first multiselect ubuntu-desktop
   d-i finish-install/reboot_in_progress note
   ubiquity ubiquity/summary note
+
+ # Don't generate a blacklist.  We're keeping all languages
+ d-i ubiquity/install/generate-blacklist boolean false
 
  # Preload language packages
  # These are all included on the DVD already in a preinstalled format.

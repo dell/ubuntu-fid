@@ -72,7 +72,8 @@ EOF
     chroot /root sfdisk -A${RP_PART_NUM} ${BOOTDEV}
 
     #Copy files into recovery partition
-    cp /root/cdrom/ /tmp/mnt -R
+    cp /root/cdrom/* /tmp/mnt -R
+    cp /root/cdrom/.disk /tmp/mnt -R
 
     #create a new UUID for the partition we
     #are dropping down to allow the user to

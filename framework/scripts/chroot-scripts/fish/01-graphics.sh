@@ -41,7 +41,6 @@ elif `lspci | grep VGA | grep 'AMD\|ATI' >/dev/null`; then
 		gdebi -n /cdrom/debs/fglrx/*kernel-source*.deb
 		gdebi -n /cdrom/debs/fglrx/xorg-driver-fglrx*.deb
 
-	<---- The AMD DVD check is turned off until the driver is functional ---->
 	#We don't have newer drivers, lets install from the DVD
 	else
 		apt-get install xorg-driver-fglrx -y

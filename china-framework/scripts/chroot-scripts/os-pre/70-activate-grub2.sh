@@ -8,7 +8,7 @@ if ls /cdrom/debs/grub2/*.deb > /dev/null 2>&1; then
     #in noninteractive mode, take out grub1
     #first
     rm /boot/grub -rf
-    dpkg -i /cdrom/debs/grub2/*.deb
+    gdebi -n /cdrom/debs/grub2/*.deb
 
     #Reinstall grub2 to set the default bootloader to 
     #be grub2 rather than chainloading

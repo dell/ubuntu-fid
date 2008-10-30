@@ -1,0 +1,16 @@
+.disk
+casper
+dists
+isolinux
+pool/main/d/dkms
+pool/main/f/
+pool/main/p/patch
+pool/main/o/oem-config
+pool/main/l/linux/
+pool/main/l/lzo2/
+pool/restricted/d
+pool/restricted/f
+pool/restricted/l
+pool/restricted/n
+ubuntu
+

@@ -85,5 +85,27 @@ EOF
     umount /root/mnt
     umount /tmp/mnt
     sync
-    return
+    #eject the disk
+    eject -p -m /cdrom >/dev/null 2>&1 || true
+
+    #tell the user to reboot
+    if grep -q splash /proc/cmdline; then
+        /sbin/usplash_write "TIMEOUT 0"
+        /sbin/usplash_write "VERBOSE on"
+	/sbin/usplash_write "CLEAR"
+        /sbin/usplash_write "TEXT-URGENT Please remove this DVD OR USB stick"
+        /sbin/usplash_write "TEXT-URGENT and press enter to reboot."
+	/sbin/usplash_write "PROGRESS 100"
+    else
+        echo -e "\n\n"
+        echo -e "\n\n"
+        echo -e "\n\n"
+        echo -e "\n\n"
+        echo -e "\n\n"
+        echo -e ""
+        echo -e ""Please remove this DVD OR USB stick""
+        echo -e ""and press enter to reboot""
+    fi
+    read x < /dev/console
+    reboot -n
 fi

@@ -25,7 +25,9 @@
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
 
-if grep -q REINSTALL /proc/cmdline; then
+# Check for partition 3 or for if this is really a REINSTALL.
+# If they don't exist then we don't need to ask to clear them!
+if grep -q DVDBOOT /proc/cmdline || ( grep -q REINSTALL /proc/cmdline && [ -e $BOOT_PART ] ); then
 
     #stop usplash (yes start stops it)
     #/root/etc/init.d/usplash start || true

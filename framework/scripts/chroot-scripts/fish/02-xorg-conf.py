@@ -67,5 +67,7 @@ if nvidia or fglrx:
             if nvidia:
                 print '\tOption\t\t"NoLogo"\t\t"True"'
                 print '\tOption\t\t"IgnoreDisplayDevices"\t"TV"'
+        if fglrx and 'Device\t\t"Configured Video Device"' in line:
+            print '\tDefaultDepth\t24'
     fileinput.close()
 

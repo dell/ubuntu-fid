@@ -41,10 +41,7 @@
   d-i console-setup/layoutcode string us
   d-i console-setup/variantcode string
 
-### Clock and time zone setup
-
- # Controls whether or not the hardware clock is set to UTC.
-  d-i clock/setup/utc boolean false
+### Time zone setup
 
  # You may set this to any valid setting for $TZ; see the contents of
  # /usr/share/zoneinfo/ for valid values.

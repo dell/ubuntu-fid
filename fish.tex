@@ -1,0 +1,111 @@
+\documentclass[letterpaper,10pt,titlepage]{article}
+
+%url support
+\usepackage{url}
+\usepackage[pdftex]{hyperref}
+\hypersetup{
+    colorlinks,%
+    citecolor=black,%
+    filecolor=black,%
+    linkcolor=black,%
+    urlcolor=black
+}
+
+%underscore w/o escape
+\usepackage{underscore}
+
+%pdf metadata and sizing
+\usepackage{ifpdf}
+\ifpdf
+\pdfinfo
+{ /Title (FISH packaging guide)
+  /Author (Mario Limonciello)
+  /CreationDate (D:20081111042607) % this is the format used by pdf for date/time
+}
+\fi
+
+\title{\textbf{Ubuntu FISH Packaging Guide}}
+\author{Mario Limonciello\\ Mario\_Limonciello@Dell.com}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+Within Dell, Ubuntu is shipped across a variety of LOBs.  The requirements for these LOBs will vary, but for the most part they leverage a common framework for performing a factory installation.  The success of this framework requires that all teams that use it understand how to properly create releases for I-Drive.
+
+\section{UBX Token}
+Starting with Ubuntu 8.10, the Linux FI team has created a token that will always be used when performing an Ubuntu install, the \textbf{UBX} token.  This token will support multiple versions, but it's important that the I-drive release that is paired with it is intended for the correct version.  When creating an I-Drive release, remember to include in the description what version of Ubuntu it is targeted for.
+
+\subsection{FI Basic layout}
+The UBX token will have a framework laid out in the following structure:
+\begin{itemize}
+\item ./grub
+\item ./docs
+\item ./preseed
+\item ./scripts
+\item ./scripts/chroot-scripts
+\item ./scripts/chroot-scripts/os-pre
+\item ./scripts/chroot-scripts/fish
+\item ./scripts/chroot-scripts/os-post
+\item ./debs
+\item ./debs/main
+\item ./isolinux
+\end{itemize}
+
+The only two main directories relevant to FISH are \textbf{./debs} and \textbf{./scripts/chroot-scripts/fish}.
+
+\section{Preparing an I-Drive Release}
+When creating an I-drive release, any modifications should be reflective as though they were to be extracted on \textit{top} of  the existing UBX FI framework.  Be sure to always place this directory structure in your ZIP or TAR.GZ on I-Drive.
+
+\subsection{Generic DEBs only}
+If this release is providing an application or a standalone set of DEBS that don't need any system integration, they should placed in
+\textbf{./debs/main}.  All debs placed in this directory are automatically installed by the UBX FI Framework.
+
+\subsection{ AMD \& NVIDIA Graphics Drivers}
+Graphics drivers are distributed soley as debs, but are a corner case because a post installation procedure needs to be ran.  This post-installation procedure is included in the UBX FI framework, but has some expectations in terms of where the debs will be found.
+\
+For AMD graphics, you will require two debs in this structure:
+\begin{itemize}
+\item ./debs/fglrx/xorg-driver-fglrx*.deb
+\item ./debs/fglrx/*kernel-source*.deb
+\end{itemize}
+\
+For NVIDIA graphics, you will require two debs in this structure:
+\begin{itemize}
+\item ./debs/nvidia/nvidia-glx*.deb
+\item ./debs/nvidia/*kernel-source*.deb
+\end{itemize}
+
+\subsection{Updated core kernel drivers}
+If you require an updated driver that is built into the kernel image itself, you will have to obtain an updated kernel image from Canonical.  If just a module needs to be rev'ed, please see below in \textit{Updated Kernel Module}.  If you really \textbf{do} need to FISH an updated kernel package, follow these two steps:
+\
+First, include the updated four debs in:
+\begin{itemize}
+\item ./debs/kernel/linux-headers*_all.deb
+\item ./debs/kernel/linux-headers*_i386.deb
+\item ./debs/kernel/linux-image*.deb
+\item ./debs/kernel/linux-libc-dev*.deb
+\end{itemize}
+Unfortunately, you will also have to update the restricted driver because they are tied together by an ABI version.  Again, Canonical will have to provide this to you.  Follow the directions for the updated Broadcom Wireless driver to update it.  Be sure that both updates are placed in a common I-Drive release with the structure intact.
+
+\subsection{Broadcom Wireless driver}
+Because of the way that the Broadcom wireless driver is built into Ubuntu, Canonical will have to deliver an updated linux-restricted-modules package with the new version of the driver.  To FISH this package, you have to follow two steps.
+\\
+First, include the updated two debs in:
+\begin{itemize}
+\item ./debs/restricted/linux-restricted-modules-common*.deb
+\item ./debs/restricted/linux-restricted-modules*.deb
+\end{itemize}
+Next, include an updated \textbf{./scripts/chroot-scripts/fish/04-kernel.py}.  Unfortunately, you will not be able to update the kernel and restricted driver in separate releases because they are tied together by an ABI version.  If you need to update the kernel too, be sure to place both together in the same release.
+
+\subsection{Updated Kernel Module}
+If you are just providing an updated kernel module, it must be packaged via DKMS and placed in the generic debs directory, \textbf{./debs/main}.  It is important that you add a directive to the DKMS control file that indicates when the module is available in Ubuntu so that DKMS deactivates at the proper time in the field.
+
+\subsection{Scripts}
+If your release provides any type of postinstall script, be sure to place it in \textbf{./scripts/chroot-scripts/fish}.  This will ensure that it runs at the proper point in installation.
+
+\end{document}

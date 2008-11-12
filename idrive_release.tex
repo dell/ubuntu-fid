@@ -18,13 +18,13 @@
 \usepackage{ifpdf}
 \ifpdf
 \pdfinfo
-{ /Title (FISH packaging guide)
+{ /Title (Ubuntu I-Drive packaging guide)
   /Author (Mario Limonciello)
   /CreationDate (D:20081111042607) % this is the format used by pdf for date/time
 }
 \fi
 
-\title{\textbf{Ubuntu FISH Packaging Guide}}
+\title{\textbf{Ubuntu I-Drive Packaging Guide}}
 \author{Mario Limonciello\\ Mario\_Limonciello@Dell.com}
 \date{\today}
 
@@ -35,7 +35,7 @@
 \newpage
 
 \section{Introduction}
-Within Dell, Ubuntu is shipped across a variety of LOBs.  The requirements for these LOBs will vary, but for the most part they leverage a common framework for performing a factory installation.  The success of this framework requires that all teams that use it understand how to properly create releases for I-Drive.
+Within Dell, Ubuntu is shipped across a variety of LOBs.  The requirements for these LOBs will vary, but for the most part they leverage a common framework for performing a factory installation.  The success of this framework requires that all teams that use it understand how to properly create releases for I-Drive.  This guide should help create the proper structure and framework for all I-Drive releases created for any Ubuntu release that uses the UBX token.
 
 \section{UBX Token}
 Starting with Ubuntu 8.10, the Linux FI team has created a token that will always be used when performing an Ubuntu install, the \textbf{UBX} token.  This token will support multiple versions, but it's important that the I-drive release that is paired with it is intended for the correct version.  When creating an I-Drive release, remember to include in the description what version of Ubuntu it is targeted for.
@@ -107,5 +107,8 @@ If you are just providing an updated kernel module, it must be packaged via DKMS
 
 \subsection{Scripts}
 If your release provides any type of postinstall script, be sure to place it in \textbf{./scripts/chroot-scripts/fish}.  This will ensure that it runs at the proper point in installation.
+
+\subsection{Documentation}
+If you have relevant documentation for the product you are including, this documentation should be included as PDF in the \textbf{./docs} directory if your release.  All documentation in this directory gets placed in a folder with a symbolic link on the user\'s desktop.
 
 \end{document}

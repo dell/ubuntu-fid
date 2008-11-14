@@ -30,6 +30,8 @@ fglrx_package="xorg-driver-fglrx"
 
 import fileinput
 import apt_pkg
+import subprocess
+import string
 
 apt_pkg.init()
 cache=apt_pkg.GetCache()
@@ -70,4 +72,25 @@ if nvidia or fglrx:
         if fglrx and 'Device\t\t"Configured Video Device"' in line:
             print '\tDefaultDepth\t24'
     fileinput.close()
+
+#Check for the case that we have two NV cards
+#hybrid graphics is broke right now, see NV479891
+if nvidia:
+    count=0
+    cards=[]
+    output=string.split(subprocess.Popen(['lspci'],stdout=subprocess.PIPE).communicate()[0],'\n')
+    for line in output:
+        if line and 'VGA' in line and 'nVidia' in line:
+            count=count+1
+            cards.append(line)
+    if count > 1:
+        for card in cards:
+            if "9200" not in card:
+                for line in fileinput.input(xorg_conf,inplace=1):
+                    print line[:-1]
+                    if '\tOption\t\t"IgnoreDisplayDevices"\t"TV"' in line:
+                        print '\tBusID\t\t"PCI:' + string.replace(string.split(card)[0],'.',':') + '"'
+                fileinput.close()
+
+
 

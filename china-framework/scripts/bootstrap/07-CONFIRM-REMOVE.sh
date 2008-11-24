@@ -1,15 +1,62 @@
 #!/bin/sh
 
-if grep -q REMOVE /proc/cmdline; then
-	# already run one time... this must be a remove
-	# ask the user
-	# Remove all parts save N1
-        DRIVE=/dev/sda
-        if [ ! -e $DRIVE ]; then break; fi
-        echo "0,0,0,-" | sfdisk -uS -N2 --force --no-reread $DRIVE
-        echo "0,0,0,-" | sfdisk -uS -N3 --force --no-reread $DRIVE
-        echo "0,0,0,-" | sfdisk -uS -N4 --force --no-reread $DRIVE
+remove_fn()
+{
+    if grep -q REMOVE /proc/cmdline; then
+    # already run one time... this must be a reinstall
+        # ask the user
+        set +x
+        CORRECT_ANSWER="REMOVE"
 
-        echo "Operating System has been removed. The system is now unbootable. You must reinstall an operating system for the computer."
-        sleep 600000 
-fi
+        if grep -q splash /proc/cmdline; then
+            /sbin/usplash_write "TIMEOUT 0"
+            /sbin/usplash_write "VERBOSE on"
+            /sbin/usplash_write "TEXT-URGENT ---WARNING---"
+            /sbin/usplash_write "TEXT-URGENT This operation will remove Ubuntu Linux from your computer"
+            /sbin/usplash_write "TEXT-URGENT ALL DATA ON YOUR HARD DRIVE WILL BE PERMANENTLY LOST."
+            /sbin/usplash_write "INPUT To proceed, please type: $CORRECT_ANSWER.  "
+            answer=$(cat /dev/.initramfs/usplash_outfifo)
+        else
+            echo -e "\n\n"
+            echo -e "\n\n"
+            echo -e "\n\n"
+            echo -e "\n\n"
+            echo -e "\n\n"
+            echo -e 'WARNING!    WARNING!   WARNING!'
+            echo -e ""
+            echo -e "This operation will remove Ubuntu Linux from your computer"
+            echo -e "ALL DATA ON YOUR HARD DRIVE WILL BE PERMANENTLY LOST."
+            echo -e ""
+            read -p "To proceed please type: $CORRECT_ANSWER " answer > /dev/console 2>&1 < /dev/console
+        fi
+
+        if [ "$answer" = "$CORRECT_ANSWER" ]; then
+            if grep -q splash /proc/cmdline; then
+                /sbin/usplash_write "CLEAR"
+                /sbin/usplash_write "TEXT-URGENT Removing Ubuntu linux."
+            else
+                echo -e "\n\n" > /dev/console
+                echo "Removing Ubuntu Linux" > /dev/console
+            fi
+            set -x
+
+            cp /dev /root -R
+            chroot /root/ parted -s $BOOTDEV rm 2 || :
+            chroot /root/ parted -s $BOOTDEV rm 3 || :
+            chroot /root/ parted -s $BOOTDEV rm 4 || :
+            reboot
+
+        fi
+
+        if grep -q splash /proc/cmdline; then
+            /sbin/usplash_write "CLEAR"
+            /sbin/usplash_write "TEXT-URGENT Invalid entry."
+        else
+            echo "Invalid entry." > /dev/console
+        fi
+    fi
+}
+
+while true; do remove_fn; done
+
+

@@ -29,6 +29,7 @@ if `lspci | grep VGA | grep nVidia >/dev/null`; then
 	if [ -d /cdrom/debs/nvidia ]; then
 		gdebi -n /cdrom/debs/nvidia/*kernel-source*.deb
 		gdebi -n /cdrom/debs/nvidia/nvidia-glx*.deb
+		gdebi -n /cdrom/debs/nvidia/*modaliases*.deb
 	#We don't have newer drivers, lets install from the DVD
 	else
 		apt-get install nvidia-glx-177 -y

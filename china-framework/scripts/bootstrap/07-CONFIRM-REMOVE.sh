@@ -2,7 +2,6 @@
 
 remove_fn()
 {
-    if grep -q REMOVE /proc/cmdline; then
     # already run one time... this must be a reinstall
         # ask the user
         set +x
@@ -54,9 +53,11 @@ remove_fn()
         else
             echo "Invalid entry." > /dev/console
         fi
-    fi
+
 }
 
-while true; do remove_fn; done
+if grep -q REMOVE /proc/cmdline; then
+    while true; do remove_fn; done
+fi
 
 

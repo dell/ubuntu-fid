@@ -17,5 +17,7 @@ if ls /cdrom/debs/grub2/*.deb > /dev/null 2>&1; then
     #don't generate grub.cfg now.  it will be generated
     #after the artwork is installed
     touch /boot/grub/grub.cfg
+
+    rm -f /etc/kernel/prerm.d/last-good-boot
 fi
 

@@ -5,7 +5,7 @@ remove_fn()
     # already run one time... this must be a reinstall
         # ask the user
         set +x
-        CORRECT_ANSWER="REMOVE"
+        CORRECT_ANSWER="remove"
 
         if grep -q splash /proc/cmdline; then
             /sbin/usplash_write "TIMEOUT 0"

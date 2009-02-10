@@ -27,6 +27,7 @@
 if `lspci | grep VGA | grep nVidia >/dev/null`; then
 	#If we have newer nvidia drivers, we can get them from here
 	if [ -d /cdrom/debs/nvidia ]; then
+		gdebi -n /cdrom/debs/nvidia/nvidia*libvdpau*.deb
 		gdebi -n /cdrom/debs/nvidia/*kernel-source*.deb
 		gdebi -n /cdrom/debs/nvidia/nvidia-glx*.deb
 		gdebi -n /cdrom/debs/nvidia/*modaliases*.deb

@@ -30,6 +30,7 @@ if `lspci | grep VGA | grep nVidia >/dev/null`; then
 		gdebi -n /cdrom/debs/nvidia/*kernel-source*.deb
 		gdebi -n /cdrom/debs/nvidia/nvidia-glx*.deb
 		gdebi -n /cdrom/debs/nvidia/*modaliases*.deb
+		apt-get install nvidia-settings -y
 	#We don't have newer drivers, lets install from the DVD
 	else
 		apt-get install nvidia-glx-177 -y
@@ -41,6 +42,8 @@ elif `lspci | grep VGA | grep 'AMD\|ATI' >/dev/null`; then
 	if [ -d /cdrom/debs/fglrx ]; then
 		gdebi -n /cdrom/debs/fglrx/*kernel-source*.deb
 		gdebi -n /cdrom/debs/fglrx/xorg-driver-fglrx*.deb
+		gbedi -n /cdrom/debs/fglrx/*amdcccle*.deb
+		gdebi -n /cdrom/debs/fglrx/*modaliases*.deb
 
 	#We don't have newer drivers, lets install from the DVD
 	else

@@ -25,7 +25,7 @@
 xorg_conf='/etc/X11/xorg.conf'
 jockey_conf='/var/cache/jockey/check'
 
-nvidia_package="nvidia-glx-177"
+nvidia_package="nvidia-glx-180"
 fglrx_package="xorg-driver-fglrx"
 
 import fileinput
@@ -50,8 +50,8 @@ if nvidia:
     driver="nvidia"
     jockey=open(jockey_conf,'a')
     jockey.write('seen xorg:nvidia-173\n')
-    jockey.write('seen xorg:nvidia-177\n')
-    jockey.write('used xorg:nvidia-177\n')
+    jockey.write('seen xorg:nvidia-180\n')
+    jockey.write('used xorg:nvidia-180\n')
     jockey.close()
 elif fglrx:
     driver="fglrx"

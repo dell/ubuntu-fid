@@ -49,7 +49,7 @@ if grep -q DVDBOOT /proc/cmdline; then
     echo 0,0,0 | chroot /root sfdisk -N3 ${BOOTDEV} --force  || :
 
     # recopy dev files in case they changed (yes, this can happen)
-    cp /dev /root -R
+    cp /dev /root -R -f
 
     # restore file contents of UP
     cat /root/cdrom/upimg.bin | gzip -d -c | dd of=${BOOTDEV}${UP_PART_NUM}

@@ -35,7 +35,7 @@ if grep -q DVDBOOT /proc/cmdline; then
     dd if=/root/cdrom/mbr.bin of=$BOOTDEV
 
     # need to copy /dev files into chroot
-    cp /dev /root -R
+    cp /dev /root -R -f
 
     # re-read partition table
     chroot /root/ sfdisk -R $BOOTDEV

@@ -64,6 +64,14 @@ else
     export INSTALL_PART=/dev/disk/by-label/$(readlink $devpath/$label)
 fi
 
+#Check that EDD is actually working.  For some situations it
+#hasn't been, and we need it in our preseed.
+#If it isn't working, fallback to /dev/sda
+EDDDEV=$(readlink -f /dev/disk/by-id/edd-int13_dev80) || :
+if [ -z "$EDDDEV" ]; then
+    ln -s ../../sda /dev/disk/by-id/edd-int13_dev80
+fi
+
 export BOOT_PART=${INSTALL_PART%%[0-9]*}$BOOT_PART_NUM
 export SWAP_PART=${INSTALL_PART%%[0-9]*}$SWAP_PART_NUM
 export BOOTDEV=${INSTALL_PART%%[0-9]*}

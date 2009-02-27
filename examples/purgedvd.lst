@@ -4,6 +4,7 @@ dists
 isolinux
 pool/main/d/dkms
 pool/main/f/
+pool/main/n/
 pool/main/p/patch
 pool/main/o/oem-config
 pool/main/l/linux/

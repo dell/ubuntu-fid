@@ -38,13 +38,10 @@ export BOOT_PART_NUM=3
 export SWAP_PART_NUM=5
 
 if grep -q DVDBOOT /proc/cmdline; then
-    # We'll try to use EDD to figure out what drive we're booting to
-    INSTALL_PART=$(readlink -f /dev/disk/by-id/edd-int13_dev80) || true
-    # in case that fails (bad MBR or something), fall back to /dev/sda
-    if [ -z "$INSTALL_PART" ] || [ "$INSTALL_PART" = "/dev/disk/by-id/edd-int13_dev80" ]; then
-        INSTALL_PART="/dev/sda"
-        ln -s ../../sda /dev/disk/by-id/edd-int13_dev80
-    fi
+    # Assume we are just blasting the recovery stuff on /dev/sda
+    # since we don't actually know where the target drive is
+    # with usb sticks on the system and what not
+    INSTALL_PART="/dev/sda"
     export INSTALL_PART=${INSTALL_PART}$RP_PART_NUM
 else
     # DVDBOOT cannot assume drive will be properly labelled

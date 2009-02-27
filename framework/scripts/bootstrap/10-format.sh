@@ -26,7 +26,7 @@
 #       MA 02110-1301, USA.
 
 # need to copy device node to /root
-cp /dev /root -R -f
+cp /dev /root -R -f || :
 
 # Step 0: make RP bootable so we recover from any partial install
 chroot /root/ sfdisk -A$RP_PART_NUM $BOOTDEV

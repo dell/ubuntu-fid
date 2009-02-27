@@ -35,7 +35,7 @@ if grep -q DVDBOOT /proc/cmdline || ( grep -q REINSTALL /proc/cmdline && [ -e $B
     # already run one time... this must be a reinstall
     # ask the user
     set +x
-    CORRECT_ANSWER="erase"
+    CORRECT_ANSWER="ERASE"
 
     if grep -q splash /proc/cmdline; then
     	/sbin/usplash_write "TIMEOUT 0"

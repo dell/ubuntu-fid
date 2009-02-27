@@ -92,10 +92,10 @@ EOF
     if grep -q splash /proc/cmdline; then
         /sbin/usplash_write "TIMEOUT 0"
         /sbin/usplash_write "VERBOSE on"
-	/sbin/usplash_write "CLEAR"
-        /sbin/usplash_write "TEXT-URGENT Please remove this DVD OR USB stick"
-        /sbin/usplash_write "TEXT-URGENT and press enter to reboot."
-	/sbin/usplash_write "PROGRESS 100"
+        /sbin/usplash_write "CLEAR"
+        /sbin/usplash_write "PROGRESS 100"
+        /sbin/usplash_write "INPUTENTER Please remove this recovery media and press enter to reboot."
+        answer=$(cat /dev/.initramfs/usplash_outfifo)
     else
         echo -e "\n\n"
         echo -e "\n\n"
@@ -103,9 +103,8 @@ EOF
         echo -e "\n\n"
         echo -e "\n\n"
         echo -e ""
-        echo -e ""Please remove this DVD OR USB stick""
-        echo -e ""and press enter to reboot""
+        echo -e ""Please remove this recovery media and press enter to reboot""
+        read x < /dev/console
     fi
-    read x < /dev/console
     reboot -n
 fi

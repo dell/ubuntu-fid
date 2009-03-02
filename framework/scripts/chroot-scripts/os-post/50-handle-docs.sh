@@ -28,7 +28,7 @@
 
 IFHALT "Copying Vendor Documents..."
 
-if [ -d /cdrom/docs ]; then
+if [ -d /cdrom/docs ] && [ "$(ls -A /cdrom/docs)" ]; then
         mkdir -p /usr/share/doc/dell
     cp -a /cdrom/docs/* /usr/share/doc/dell
     [ ! -d "/etc/skel/Desktop" ] && mkdir -p /etc/skel/Desktop

@@ -34,22 +34,11 @@ if grep -q DVDBOOT /proc/cmdline; then
     # drop original MBR back in
     dd if=/root/cdrom/mbr.bin of=$BOOTDEV
 
-    # need to copy /dev files into chroot
+    # copy dev files
     cp /dev /root -R -f || :
 
     # re-read partition table
     chroot /root/ sfdisk -R $BOOTDEV
-
-    # delete partition 4
-    chroot /root/ parted -s $BOOTDEV rm 4 || :
-    echo 0,0,0 | chroot /root sfdisk -N4 ${BOOTDEV} --force  || :
-
-    # delete partition 3
-    chroot /root/ parted -s $BOOTDEV rm 3 || :
-    echo 0,0,0 | chroot /root sfdisk -N3 ${BOOTDEV} --force  || :
-
-    # recopy dev files in case they changed (yes, this can happen)
-    cp /dev /root -R -f || :
 
     # restore file contents of UP
     cat /root/cdrom/upimg.bin | gzip -d -c | dd of=${BOOTDEV}${UP_PART_NUM}

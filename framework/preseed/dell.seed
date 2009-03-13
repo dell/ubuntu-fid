@@ -12,7 +12,7 @@
 #        * Hard drive layout
 #        * Framework enablement
 #
-#       Copyright 2008 Dell Inc.
+#       Copyright 2008-2009 Dell Inc.
 #           Mario Limonciello <Mario_Limonciello@Dell.com>
 #           Hatim Amro <Hatim_Amro@Dell.com>
 #           Michael E Brown <Michael_E_Brown@Dell.com>
@@ -74,6 +74,7 @@
  # apt stuff (prevent install-time hang)
   d-i apt-setup/use_mirror boolean true
   d-i apt-setup/security_host string
+  d-i apt-setup/partner boolean true
 
 ### Partitioning
 

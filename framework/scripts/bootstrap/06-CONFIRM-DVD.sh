@@ -37,7 +37,7 @@ if grep -q DVDBOOT /proc/cmdline; then
     #size of our UP, in bytes
     utility_partition_size=`chroot /root gzip -l --quiet /cdrom/upimg.bin | awk '{ print \$2 }'`
     #size of our UP, in Mbytes (for fdisk)
-    utility_partition_size=$((utility_partition_size/2048))
+    utility_partition_size=$((utility_partition_size/1048576))
 
     #size of our RP in kbytes
     recovery_partition_size=`chroot /root du -s /cdrom | cut -f1`

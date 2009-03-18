@@ -30,7 +30,7 @@ IFHALT "Adding reinstall partition to boot list"
 
 cat >> /boot/grub/menu.lst <<-EOF
 
-title Reinstall Operating System (WARNING: all Hard Drive data will be LOST!)
+title Reinstall Operating System (WARNING: all data will be LOST!)
   root (hd0,1)
   kernel /casper/vmlinuz preseed/file=/cdrom/preseed/dell.seed boot=casper automatic-ubiquity noprompt REINSTALL edd=on splash quiet
   initrd /casper/initrd.gz

@@ -26,4 +26,4 @@
 amixer -c 0 -q set Front 100% unmute 2>&1 || true
 amixer -c 0 -q set PCM 100% unmute 2>&1 || true
 amixer -c 0 -q set Master 80% unmute 2>&1 || true
-alsactl store 0 2>&1
+alsactl store 0 2>&1 || true

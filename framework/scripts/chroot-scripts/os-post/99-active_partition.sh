@@ -28,8 +28,10 @@
 
 . /cdrom/scripts/chroot-scripts/fifuncs ""
 
-IFHALT "Activate bootable partition..."
+if ! grep -q INTERACTIVE /proc/cmdline; then
+    IFHALT "Activate bootable partition..."
 
-#Sets the active partition to the newly installed partition
-#as a last step, in the event of a possible power outage
-sfdisk -A$BOOT_PART_NUM $BOOTDEV
+    #Sets the active partition to the newly installed partition
+    #as a last step, in the event of a possible power outage
+    sfdisk -A$BOOT_PART_NUM $BOOTDEV
+fi

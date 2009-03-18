@@ -25,21 +25,23 @@
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
 
-# /root/dev and /dev need to be in sync while we do this file
-mount -o bind /dev /root/dev
+if ! grep -q INTERACTIVE /proc/cmdline; then
+    # /root/dev and /dev need to be in sync while we do this file
+    mount -o bind /dev /root/dev
 
-# Mark RP bootable
-chroot /root sfdisk -A${RP_PART_NUM} ${BOOTDEV}
+    # Mark RP bootable
+    chroot /root sfdisk -A${RP_PART_NUM} ${BOOTDEV}
 
-# * Delete partitions 3 & 4 since that's where we are installing to
-chroot /root/ parted -s ${BOOTDEV} rm 3 || :
-chroot /root/ parted -s ${BOOTDEV} rm 4 || :
+    # * Delete partitions 3 & 4 since that's where we are installing to
+    chroot /root/ parted -s ${BOOTDEV} rm 3 || :
+    chroot /root/ parted -s ${BOOTDEV} rm 4 || :
 
-# Install grub onto the RP
-chroot /root grub <<-EOF
-    root (hd0,1)
-    setup (hd0,1)
-    quit
+    # Install grub onto the RP
+    chroot /root grub <<-EOF
+root (hd0,1)
+setup (hd0,1)
+quit
 EOF
 
-umount /root/dev
+    umount /root/dev
+fi

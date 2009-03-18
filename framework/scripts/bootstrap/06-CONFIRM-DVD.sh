@@ -31,23 +31,66 @@
 
 if grep -q DVDBOOT /proc/cmdline; then
 
-    # drop original MBR back in
-    dd if=/root/cdrom/mbr.bin of=$BOOTDEV
+    # /root/dev and /dev need to be in sync while we do this file
+    mount -o bind /dev /root/dev
 
-    # copy dev files
-    cp /dev /root -R -f || :
+    #size of our UP, in bytes
+    utility_partition_size=`chroot /root gzip -l --quiet /cdrom/upimg.bin | awk '{ print \$2 }'`
+    #size of our UP, in Mbytes (for fdisk)
+    utility_partition_size=$((utility_partition_size/2048))
 
-    # re-read partition table
-    chroot /root/ sfdisk -R $BOOTDEV
+    #size of our RP in kbytes
+    recovery_partition_size=`chroot /root du -s /cdrom | cut -f1`
+    #size of our RP in MBytes with some 300M cushion (for fdisk)
+    recovery_partition_size=$((recovery_partition_size/1024 + 300))
+
+    #clear partition table up
+    dd if=/dev/zero of=${BOOTDEV} bs=512 count=2
+
+    #partitioning activities
+    # create UP
+    # set UP to type de
+    # create RP
+    # set RP to type vfat
+    # set RP to bootable
+    chroot /root/ fdisk ${BOOTDEV} <<EOF
+n
+p
+${UP_PART_NUM}
+
++${utility_partition_size}M
+t
+de
+
+n
+p
+${RP_PART_NUM}
+
++${recovery_partition_size}M
+
+t
+p
+${RP_PART_NUM}
+0b
+
+a
+${RP_PART_NUM}
+
+w
+EOF
+
+    #install a bootloader to MBR
+    dd if=/root/usr/lib/syslinux/mbr.bin of=${BOOTDEV} bs=446 count=1 conv=sync
 
     # restore file contents of UP
     cat /root/cdrom/upimg.bin | gzip -d -c | dd of=${BOOTDEV}${UP_PART_NUM}
 
     #create a recovery partition
-    mkdir /tmp/mnt
     chroot /root mkfs.msdos -n install ${BOOTDEV}${RP_PART_NUM}
-    mount -t vfat ${BOOTDEV}${RP_PART_NUM} /tmp/mnt
-    cp /root/cdrom/grub /tmp/mnt -R
+    mount -t vfat ${BOOTDEV}${RP_PART_NUM} /root/mnt
+
+    #Copy files into recovery partition
+    cp /root/cdrom/* /root/cdrom/.disk /root/mnt -R
 
     #add a bootloader to recovery partition
     cd /
@@ -57,23 +100,16 @@ chroot /root grub <<-EOF
     quit
 EOF
 
-    # make recovery partition bootable
-    chroot /root sfdisk -A${RP_PART_NUM} ${BOOTDEV}
-
-    #Copy files into recovery partition
-    cp /root/cdrom/* /tmp/mnt -R
-    cp /root/cdrom/.disk /tmp/mnt -R
-
     #create a new UUID for the partition we
     #are dropping down to allow the user to
     #use this cd still to recover the system
-    mount --bind /tmp/mnt /root/mnt
     chroot /root casper-new-uuid /cdrom/casper/initrd.gz /mnt/casper /mnt/.disk
 
     #clean up
+    umount /root/dev
     umount /root/mnt
-    umount /tmp/mnt
     sync
+
     #eject the disk
     eject -p -m /cdrom >/dev/null 2>&1 || true
 

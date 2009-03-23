@@ -9,7 +9,8 @@
 #        * Locale
 #        * Time zone
 #        * Mirrors
-#        * Language pack inclusion
+#        * Language pack inclusion
+
 #        * Framework enablement
 #
 #       Copyright 2009 Dell Inc.
@@ -95,12 +96,8 @@
   d-i finish-install/reboot_in_progress note
   ubiquity ubiquity/summary note
 
- # *Horrible* hack to work around bug 290400
- # this should be addressed for Jaunty and no longer necessary then
- d-i pkgsel/language-pack-patterns string language-pack-gnome-$LL icedtea6-plugin ttf-dzongkha ttf-arphic-gbsn00lp ttf-arphic-bsmi00lp openoffice.org-hyphenation openoffice.org-filter-binfilter libgcj-common m17n-db m17n-contrib default-jre default-jre-headless libgcj9-jar libxalan2-java-gcj libxerces2-java-gcj libjaxp1.3-java-gcj libgcj-bc libgcj9-0 gcj-4.3-base bsh-gcj
-
- # Don't generate a blacklist.  We're keeping all languages
- d-i ubiquity/install/generate-blacklist boolean false
+ # This is a value add extra that's injected in the DVD lifefs
+  d-i ubiquity/keep-installed string icedtea6-plugin
 
  # Preload language packages
  # These are all included on the DVD already in a preinstalled format.

@@ -1,7 +1,8 @@
 #
 #       <dell.seed>
 #
-#       Dell Ubuntu 8.10 preseed file used for FI installs
+#       Dell Ubuntu preseed file used for FI installs
+#        * Last updated for Ubuntu 9.04
 #
 #       Sets all of the defaults for the Ubuntu installation
 #        * Keyboard
@@ -12,7 +13,7 @@
 #        * Hard drive layout
 #        * Framework enablement
 #
-#       Copyright 2008 Dell Inc.
+#       Copyright 2008-2009 Dell Inc.
 #           Mario Limonciello <Mario_Limonciello@Dell.com>
 #           Hatim Amro <Hatim_Amro@Dell.com>
 #           Michael E Brown <Michael_E_Brown@Dell.com>
@@ -41,10 +42,7 @@
   d-i console-setup/layoutcode string cn 
   d-i console-setup/variantcode string
 
-### Clock and time zone setup
-
- # Controls whether or not the hardware clock is set to UTC.
-  d-i clock/setup/utc boolean false
+### Time zone setup
 
  # You may set this to any valid setting for $TZ; see the contents of
  # /usr/share/zoneinfo/ for valid values.
@@ -77,6 +75,7 @@
  # apt stuff (prevent install-time hang)
   d-i apt-setup/use_mirror boolean true
   d-i apt-setup/security_host string
+  d-i apt-setup/partner boolean true
 
 ### Partitioning
 
@@ -142,21 +141,17 @@
   d-i finish-install/reboot_in_progress note
   ubiquity ubiquity/summary note
 
- # *Horrible* hack to work around bug 290400
- # this should be addressed for Jaunty and no longer necessary then
- d-i pkgsel/language-pack-patterns string language-pack-gnome-$LL icedtea6-plugin xutils xutils-dev ttf-dzongkha ttf-arphic-gbsn00lp ttf-arphic-bsmi00lp openoffice.org-hyphenation openoffice.org-filter-binfilter libgcj-common m17n-db m17n-contrib default-jre default-jre-headless libgcj9-jar libxalan2-java-gcj libxerces2-java-gcj libjaxp1.3-java-gcj libgcj-bc libgcj9-0 gcj-4.3-base bsh-gcj
-
- # Don't generate a blacklist.  We're keeping all languages
- d-i ubiquity/install/generate-blacklist boolean false
+ # This is a value add extra that's injected in the DVD lifefs
+  d-i ubiquity/keep-installed string icedtea6-plugin
 
  # Preload language packages
  # These are all included on the DVD already in a preinstalled format.
  # We *save* time by letting them all stay preinstalled
 
  # To calculate this list, use the following command on the DVD manifest:
- # cat intrepid-dvd-i386.manifest  | grep ^lang | awk '{ print $1 }'  | grep -v writing | grep -v extra | grep -v translations | grep -v fonts | grep -v kde | grep -v env | grep -v base | less | grep -v selector | grep -v input | sed s/gnome-// | awk -F - '{ print $3 }' | sort | uniq | tr '\n' ' '
+ # cat filesystem.manifest  | grep ^lang | awk '{ print $1 }'  | grep -v writing | grep -v extra | grep -v translations | grep -v fonts | grep -v kde | grep -v env | grep -v base | less | grep -v selector | grep -v input | sed s/gnome-// | awk -F - '{ print $3 }' | sort | uniq | tr '\n' ' '
 
-  d-i pkgsel/language-packs string aa ace af ak am an ang ar as ast az bal be ber bg bho bn bo br bs bua byn ca ceb co crh cs csb cv cy da de dsb dv dz el en eo es et eu fa fi fil fo fr frm fur fy ga gd gl gn grc gu gv ha haw he hi hil hr ht hu hy ia id ii io is it ja jbo jv ka kab kbd kk km kn ko kok ks ku kw ky la lb lg li ln lo lt lv mai mg mh mi mk ml mn mnc mr ms mt mus my nap nb nds ne nl nn no nr nso oc oj om or pa pap pl ps pt qu rm ro rom ru rw sa sc sco sd se si sk sl sn so sq sr ss st sv sw syr ta te tet tg th ti tk tl tlh tn tr ts tt ug uk ur uz ve vi wa wo xh yi yo za zh zu zza
+  d-i pkgsel/language-packs string aa af am an ar as ast az be ber bg bn bo br bs ca crh cs csb cy da de dz el en eo es et eu fa fi fil fo fr fur fy ga gd gl gu gv ha he hi hr hsb hu hy ia id ig ii is it ja ka kk km kn ko ks ku kw ky la lg li lo lt lv mai mg mi mk ml mn mnc mr ms mt my nb nds ne nl nn no nr nso oc om or pa pap pl pt ro ru rw sa sc se shs si sk sl so sq sr ss st sv sw ta te tg th ti tk tl tn tr ts tt ug uk ur uz ve vi wa wo xh yi yo za zh zu
 
  # if we are using a CD, then only activate this one:
   #d-i pkgsel/language-packs string en

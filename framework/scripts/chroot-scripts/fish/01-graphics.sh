@@ -47,8 +47,7 @@ elif `lspci | grep VGA | grep 'AMD\|ATI' >/dev/null`; then
 		gdebi -n /cdrom/debs/fglrx/*modaliases*.deb
 
 	#We don't have newer drivers, lets install from the DVD
-	#fglrx on the DVD doesn't work right now for jaunty
-	#else
-	#	apt-get install xorg-driver-fglrx -y
+	else
+		apt-get install xorg-driver-fglrx -y
 	fi
 fi

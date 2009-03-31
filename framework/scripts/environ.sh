@@ -43,8 +43,9 @@ if grep -q DVDBOOT /proc/cmdline; then
     # with usb sticks on the system and what not
     INSTALL_PART="/dev/sda"
     export INSTALL_PART=${INSTALL_PART}$RP_PART_NUM
-else
+elif ! grep -q INTERACTIVE /proc/cmdline; then
     # DVDBOOT cannot assume drive will be properly labelled
+    # INTERACTIVE doesn't need INSTALL_PART defined
     echo "Waiting for system devices to initialize."
     label=
     while [ -z "$label" ]

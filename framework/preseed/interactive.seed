@@ -77,10 +77,6 @@
   d-i apt-setup/security_host string
   d-i apt-setup/partner boolean true
 
- # Of course we're recovering from a USB stick
- # don't show a warning or error
-  d-i partman/filter_mounted boolean false
-
 ### User selection/password for OEM
 
  # This gets deleted by oem-config-prepare, so it doesnt matter...

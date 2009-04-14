@@ -112,6 +112,10 @@
  # install grub2 (it supports localization, which we want)
   d-i grub-installer/grub2_instead_of_grub_legacy boolean true
 
+ # Don't install to the MBR, we install to PBR instead
+  d-i grub-installer/only_debian boolean false
+  d-i grub-installer/with_other_os boolean false
+
  # Install grub2 to the proper install-to partition.
   d-i grub-installer/bootdev  string (hd0,3)
 

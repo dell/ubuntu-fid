@@ -43,7 +43,7 @@ elif `lspci | grep VGA | grep 'AMD\|ATI' >/dev/null`; then
 	if [ -d /cdrom/debs/fglrx ]; then
 		gdebi -n /cdrom/debs/fglrx/*kernel-source*.deb
 		gdebi -n /cdrom/debs/fglrx/xorg-driver-fglrx*.deb
-		gbedi -n /cdrom/debs/fglrx/*amdcccle*.deb
+		gdebi -n /cdrom/debs/fglrx/*amdcccle*.deb
 		gdebi -n /cdrom/debs/fglrx/*modaliases*.deb
 
 	#We don't have newer drivers, lets install from the DVD

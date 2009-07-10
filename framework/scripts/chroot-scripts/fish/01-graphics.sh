@@ -33,8 +33,8 @@ if `lspci | grep VGA | grep nVidia >/dev/null`; then
 		gdebi -n /cdrom/debs/nvidia/*modaliases*.deb
 		apt-get install nvidia-settings -y
 	#We don't have newer drivers, lets install from the DVD
-	else
-		apt-get install nvidia-glx-180 -y
+	#else
+	#	apt-get install nvidia-glx-180 -y
 	fi
 
 #Next, we'll check for AMD/ATI:

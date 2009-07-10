@@ -30,17 +30,22 @@ set -e
 
 echo "in bootstrap.sh" > /dev/tty12
 
+ROOT="/root/cdrom"
+if [ ! -d "$ROOT" ]; then
+    ROOT="/root"
+fi
+export ROOT
+
 exec > /dev/tty1 2>&1
-#exec > /root/tmp/bootstrap.sh.log 2>&1
 
 echo "in $0"
 
 # Execute FAIL-SCRIPT if we exit for any reason (abnormally)
-trap ". /root/cdrom/scripts/bootstrap/FAIL-SCRIPT" TERM INT HUP EXIT QUIT
+trap ". $ROOT/scripts/bootstrap/FAIL-SCRIPT" TERM INT HUP EXIT QUIT
 
-. /root/cdrom/scripts/environ.sh
+. $ROOT/scripts/environ.sh
 
-for i in /root/cdrom/scripts/bootstrap/*.sh;
+for i in $ROOT/scripts/bootstrap/*.sh;
 do
     echo "running bootstrap script: $i"  > /dev/tty12
     echo -n -e "\n\nrunning bootstrap script: $i\n"
@@ -50,4 +55,4 @@ done
 # reset traps, as we are now exiting normally
 trap - TERM INT HUP EXIT QUIT
 
-. /root/cdrom/scripts/bootstrap/SUCCESS-SCRIPT
+. $ROOT/scripts/bootstrap/SUCCESS-SCRIPT

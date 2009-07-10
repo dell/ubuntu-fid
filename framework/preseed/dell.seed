@@ -165,6 +165,10 @@
  # This first command is run as early as possible, just after
  # preseeding is read.
   d-i preseed/early_command string /root/cdrom/scripts/bootstrap.sh
-  ubiquity ubiquity/success_command string /cdrom/scripts/chroot.sh success
-  ubiquity ubiquity/failure_command string /cdrom/scripts/chroot.sh failure
-  ubiquity ubiquity/reboot boolean true
+  d-i preseed/early_command string /cdrom/scripts/bootstrap.sh
+  d-i preseed/late_command string /cdrom/scripts/chroot.sh success
+
+  ##Only relevant for live install##
+  #ubiquity ubiquity/success_command string /cdrom/scripts/chroot.sh success
+  #ubiquity ubiquity/failure_command string /cdrom/scripts/chroot.sh failure
+  #ubiquity ubiquity/reboot boolean true

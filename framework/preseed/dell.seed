@@ -2,7 +2,7 @@
 #       <dell.seed>
 #
 #       Dell Ubuntu preseed file used for FI installs
-#        * Last updated for Ubuntu 9.04
+#        * Last updated for Ubuntu 9.04 UNR
 #
 #       Sets all of the defaults for the Ubuntu installation
 #        * Keyboard
@@ -57,12 +57,16 @@
  # If you have a slow dhcp server and the installer times out waiting for
  # it, this might be useful.
   d-i netcfg/dhcp_timeout string 5
+  d-i netcfg/dhcp_failed note
+  d-i netcfg/disable_dhcp boolean false
+  d-i netcfg/wireless_wep string
 
  # Any hostname and domain names assigned from dhcp take precedence over
  # values set here. However, setting the values still prevents the questions
  # from being shown, even if values come from dhcp.
   d-i netcfg/get_hostname string dell-desktop
   d-i netcfg/get_domain string example.com
+  d-i netcfg/dhcp_options select Do not configure the network at this time
 
 ### Mirror settings
 
@@ -108,12 +112,16 @@
         format{ }                       \
         .
 
+ # Confirm disks
+  d-i partman/choose_partition select Finish partitioning and write changes to disk
+  d-i partman/confirm boolean true
+
  # In case we decide to remove swap from a drive in FI:
   d-i partman-basicfilesystems/no_swap boolean false
 
 ### Boot loader installation
  # install grub2 (it supports localization, which we want)
-  d-i grub-installer/grub2_instead_of_grub_legacy boolean true
+  d-i grub-installer/grub2_instead_of_grub_legacy boolean false
 
  # Don't install to the MBR, we install to PBR instead
   d-i grub-installer/only_debian boolean false
@@ -164,11 +172,11 @@
 
  # This first command is run as early as possible, just after
  # preseeding is read.
-  d-i preseed/early_command string /root/cdrom/scripts/bootstrap.sh
   d-i preseed/early_command string /cdrom/scripts/bootstrap.sh
   d-i preseed/late_command string /cdrom/scripts/chroot.sh success
 
   ##Only relevant for live install##
+  #d-i preseed/early_command string /root/cdrom/scripts/bootstrap.sh
   #ubiquity ubiquity/success_command string /cdrom/scripts/chroot.sh success
   #ubiquity ubiquity/failure_command string /cdrom/scripts/chroot.sh failure
   #ubiquity ubiquity/reboot boolean true

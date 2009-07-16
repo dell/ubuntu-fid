@@ -32,9 +32,7 @@ echo "in bootstrap.sh" > /dev/tty12
 
 ROOT="/root/cdrom"
 if [ ! -d "$ROOT" ]; then
-    ROOT="/root"
-    #mount the squashfs
-    mount -o loop -t squashfs /cdrom/casper/filesystem.squashfs /root
+    ROOT="/cdrom"
 fi
 export ROOT
 
@@ -56,10 +54,5 @@ done
 
 # reset traps, as we are now exiting normally
 trap - TERM INT HUP EXIT QUIT
-
-#clean up the squashfs mount
-if [ "$ROOT" = "/root" ]; then
-    umount /root
-fi
 
 . $ROOT/scripts/bootstrap/SUCCESS-SCRIPT

@@ -52,7 +52,11 @@ trap ". /cdrom/scripts/chroot-scripts/FAIL-SCRIPT" TERM INT HUP EXIT QUIT
 # Install FIST and Nobulate Here.
 # This way if we die early we'll RED Screen
 if ls /cdrom/debs/fist/*.deb > /dev/null 2>&1; then
-    dpkg -i /cdrom/debs/fist/*.deb
+    DPKG=dpkg
+    if [ -x /usr/bin/udpkg ]; then
+        DPKG=udpkg
+    fi
+    $DPKG -i /cdrom/debs/fist/*.deb
     sync;sync
     [ -f /dell/fist/tal ] && /dell/fist/tal nobulate 0
 fi

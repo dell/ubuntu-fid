@@ -29,8 +29,13 @@
 set -x
 set -e
 
-exec > /target/var/log/installer/chroot.sh.log 2>&1
-chattr +a /target/var/log/installer/chroot.sh.log
+TARGET="/target"
+LOG="var/log"
+if [ -d "$TARGET/$LOG/installer" ]; then
+    LOG="$LOG/installer"
+fi
+exec > $TARGET/$LOG/chroot.sh.log 2>&1
+chroot $TARGET chattr +a $LOG/chroot.sh.log
 
 echo "in $0"
 

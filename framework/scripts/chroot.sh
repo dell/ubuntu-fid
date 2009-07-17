@@ -29,7 +29,8 @@
 set -x
 set -e
 
-TARGET="/target"
+. /cdrom/scripts/environ.sh
+
 LOG="var/log"
 DPKG=dpkg
 if [ -d "$TARGET/$LOG/installer" ]; then
@@ -38,7 +39,6 @@ fi
 if [ -x /usr/bin/udpkg ]; then
     DPKG=udpkg
 fi
-export TARGET
 export LOG
 
 exec > $TARGET/$LOG/chroot.sh.log 2>&1
@@ -54,7 +54,6 @@ fi
 # Execute FAIL-SCRIPT if we exit for any reason (abnormally)
 trap ". /cdrom/scripts/chroot-scripts/FAIL-SCRIPT" TERM INT HUP EXIT QUIT
 
-. /cdrom/scripts/environ.sh
 
 # Install FIST and Nobulate Here.
 # This way if we die early we'll RED Screen
@@ -64,22 +63,22 @@ if ls /cdrom/debs/fist/*.deb > /dev/null 2>&1; then
     [ -f /dell/fist/tal ] && /dell/fist/tal nobulate 0
 fi
 
-mount -t proc targetproc /target/proc
-mount -t sysfs targetsys /target/sys
-mount --bind /cdrom /target/cdrom
-mount --bind /dev /target/dev
+mount -t proc targetproc $TARGET/proc
+mount -t sysfs targetsys $TARGET/sys
+mount --bind /cdrom $TARGET/cdrom
+mount --bind /dev $TARGET/dev
 
 # re-enable the cdrom for postinstall
-sed -i 's/^#deb\ cdrom/deb\ cdrom/' /target/etc/apt/sources.list
+sed -i 's/^#deb\ cdrom/deb\ cdrom/' $TARGET/etc/apt/sources.list
 
-chroot /target /cdrom/scripts/chroot-scripts/run_chroot
+chroot $TARGET /cdrom/scripts/chroot-scripts/run_chroot
 
-umount /target/cdrom
-umount /target/proc
-umount /target/sys
+umount $TARGET/cdrom
+umount $TARGET/proc
+umount $TARGET/sys
 # we're having an issue umounting dev
 # we'll try a lazy umount to detach the filesystem
-umount -l /target/dev
+umount -l $TARGET/dev
 sync;sync
 
 # reset traps, as we are now exiting normally

@@ -25,7 +25,7 @@
 #       MA 02110-1301, USA.
 
 # BE AWARE THAT THIS SCRIPT IS CALLED FROM OUTSIDE THE CHROOT.
-# The OS is mounted under /target
+# The OS is mounted under $TARGET
 
 . /cdrom/scripts/chroot-scripts/fifuncs "target"
 

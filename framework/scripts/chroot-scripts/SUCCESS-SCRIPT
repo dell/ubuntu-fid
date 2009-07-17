@@ -56,7 +56,7 @@ rm -rf /cdrom/scripts/chroot-scripts/SUCCESS-SCRIPT
 echo -e "#!/bin/sh\n# Success code goes here..." > /cdrom/scripts/chroot-scripts/SUCCESS-SCRIPT
 
 IFHALT "Remove Bad line in /etc/fstab"
-sed -i '/\/dev\/sda2/d' /target/etc/fstab
+sed -i '/\/dev\/sda2/d' $TARGET/etc/fstab
 
 IFHALT "Report the LOG... If applicable"
 chroot $TARGET chattr -a $LOG/chroot.sh.log

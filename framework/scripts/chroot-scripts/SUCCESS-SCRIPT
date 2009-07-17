@@ -25,7 +25,7 @@
 #       MA 02110-1301, USA.
 
 # BE AWARE THAT THIS SCRIPT IS CALLED FROM OUTSIDE THE CHROOT.
-# The OS is mounted under /target
+# The OS is mounted under $TARGET
 
 . /cdrom/scripts/chroot-scripts/fifuncs "target"
 
@@ -59,8 +59,8 @@ IFHALT "Remove Bad line in /etc/fstab"
 sed -i '/\/dev\/sda2/d' /target/etc/fstab
 
 IFHALT "Report the LOG... If applicable"
-chattr -a /target/var/log/installer/chroot.sh.log
-mv -f /target/var/log/installer/chroot.sh.log /tmp/fist.log
+chroot $TARGET chattr -a $LOG/chroot.sh.log
+mv -f $TARGET/$LOG/chroot.sh.log /tmp/fist.log
 if [ -f /dell/fist/tal ]; then
 	/dell/fist/tal PutFiles /tmp/fist.log
 	dpkg -r fist

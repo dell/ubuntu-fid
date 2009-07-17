@@ -61,7 +61,7 @@ trap ". /cdrom/scripts/chroot-scripts/FAIL-SCRIPT" TERM INT HUP EXIT QUIT
 if ls /cdrom/debs/fist/*.deb > /dev/null 2>&1; then
     $DPKG -i /cdrom/debs/fist/*.deb
     sync;sync
-#    [ -f /dell/fist/tal ] && /dell/fist/tal nobulate 0
+    [ -f /dell/fist/tal ] && /dell/fist/tal nobulate 0
 fi
 
 mount -t proc targetproc /target/proc

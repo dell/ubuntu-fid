@@ -37,6 +37,7 @@ if ! grep -q INTERACTIVE /proc/cmdline; then
     chroot /root/ parted -s ${BOOTDEV} rm 4 || :
 
     # Install grub onto the RP
+    export TERM=linux
     chroot /root grub <<-EOF
 root (hd0,1)
 setup (hd0,1)

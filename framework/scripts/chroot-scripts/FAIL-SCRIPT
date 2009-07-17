@@ -42,6 +42,5 @@ IFHALT "Reporting logs to DMP"
 cp -f /target/var/log/installer/chroot.sh.log /tmp/fist.err
 [ -f /dell/fist/tal ] && /dell/fist/tal PutFiles /tmp/fist.err
 sync
-dpkg -r fist
 
 IFHALT "(FAIL) Report to FI logs.. Done!"

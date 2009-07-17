@@ -39,7 +39,7 @@ ln -s /proc/mounts /etc/mtab
 mount -o remount,rw /cdrom
 
 IFHALT "Reporting logs to DMP"
-cp -f /target/var/log/installer/chroot.sh.log /tmp/fist.err
+cp -f $TARGET/$LOG/chroot.sh.log /tmp/fist.err
 [ -f /dell/fist/tal ] && /dell/fist/tal PutFiles /tmp/fist.err
 sync
 

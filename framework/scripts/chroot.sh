@@ -31,9 +31,16 @@ set -e
 
 TARGET="/target"
 LOG="var/log"
+DPKG=dpkg
 if [ -d "$TARGET/$LOG/installer" ]; then
     LOG="$LOG/installer"
 fi
+if [ -x /usr/bin/udpkg ]; then
+    DPKG=udpkg
+fi
+export TARGET
+export LOG
+
 exec > $TARGET/$LOG/chroot.sh.log 2>&1
 chroot $TARGET chattr +a $LOG/chroot.sh.log
 
@@ -52,13 +59,9 @@ trap ". /cdrom/scripts/chroot-scripts/FAIL-SCRIPT" TERM INT HUP EXIT QUIT
 # Install FIST and Nobulate Here.
 # This way if we die early we'll RED Screen
 if ls /cdrom/debs/fist/*.deb > /dev/null 2>&1; then
-    DPKG=dpkg
-    if [ -x /usr/bin/udpkg ]; then
-        DPKG=udpkg
-    fi
     $DPKG -i /cdrom/debs/fist/*.deb
     sync;sync
-    [ -f /dell/fist/tal ] && /dell/fist/tal nobulate 0
+#    [ -f /dell/fist/tal ] && /dell/fist/tal nobulate 0
 fi
 
 mount -t proc targetproc /target/proc

@@ -63,7 +63,6 @@ chroot $TARGET chattr -a $LOG/chroot.sh.log
 mv -f $TARGET/$LOG/chroot.sh.log /tmp/fist.log
 if [ -f /dell/fist/tal ]; then
 	/dell/fist/tal PutFiles /tmp/fist.log
-	dpkg -r fist
 	rm -rf /dell
 	rm -rf /cdrom/debs/fist
 fi

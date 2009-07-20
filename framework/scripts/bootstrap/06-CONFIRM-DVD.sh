@@ -87,27 +87,32 @@ EOF
 
     #create a recovery partition
     chroot /root mkfs.msdos -n install ${BOOTDEV}${RP_PART_NUM}
-    mount -t vfat ${BOOTDEV}${RP_PART_NUM} /root/mnt
+    mount -t vfat ${BOOTDEV}${RP_PART_NUM} /root/boot
 
     #Copy files into recovery partition
-    cp /root/cdrom/* /root/cdrom/.disk /root/mnt -R
+    cp /root/cdrom/* /root/cdrom/.disk /root/boot -R
 
     #add a bootloader to recovery partition
-    cd /
+    if chroot /root which grub; then
+        #we need to support grub1
+        cd /
 chroot /root grub <<-EOF
     root (hd0,1)
     setup (hd0,1)
     quit
 EOF
-
+    else
+        #we are supporting grub2
+        chroot /root grub-install ${BOOTDEV}${RP_PART_NUM}
+    fi
     #create a new UUID for the partition we
     #are dropping down to allow the user to
     #use this cd still to recover the system
-    chroot /root casper-new-uuid /cdrom/casper/initrd.gz /mnt/casper /mnt/.disk
+    chroot /root casper-new-uuid /cdrom/casper/initrd.gz /boot/casper /boot/.disk
 
     #clean up
     umount /root/dev
-    umount /root/mnt
+    umount /root/boot
     sync
 
     #eject the disk

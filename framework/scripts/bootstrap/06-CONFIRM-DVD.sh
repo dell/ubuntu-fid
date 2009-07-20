@@ -83,7 +83,7 @@ EOF
     dd if=/root/usr/lib/syslinux/mbr.bin of=${BOOTDEV} bs=446 count=1 conv=sync
 
     # restore file contents of UP
-    cat /root/cdrom/upimg.bin | gzip -d -c | dd of=${BOOTDEV}${UP_PART_NUM}
+    cat /root/cdrom/upimg.bin | chroot /root gzip -d -c | dd of=${BOOTDEV}${UP_PART_NUM}
 
     #create a recovery partition
     chroot /root mkfs.msdos -n install ${BOOTDEV}${RP_PART_NUM}

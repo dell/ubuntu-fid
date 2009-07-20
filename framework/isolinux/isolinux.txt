@@ -1,9 +1,7 @@
 
-This is the Ubuntu Live Dell Reinstallation Media.
+This is the Ubuntu Dell Reinstallation Media for Ubuntu Netbook Remix.
 
-For the default Vendor Reinstallation system, press ENTER.
-
-For boot into Live image, type 'live' and then press ENTER.
-
-To boot the the hard drive, type 'hd' and then press ENTER.
+* To restore this machine to factory settings, press ENTER.
+* For boot into a Live image, type 'live' and then press ENTER.
+* To boot the the hard drive, type 'hd' and then press ENTER.
 

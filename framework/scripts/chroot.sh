@@ -69,27 +69,35 @@ if ls /cdrom/debs/fist/*.deb > /dev/null 2>&1; then
     [ -f /dell/fist/tal ] && /dell/fist/tal nobulate 0
 fi
 
-if ! mount | grep targetproc; then
+MOUNT_CLEANUP=
+if ! mount | grep "$TARGET/proc"; then
     mount -t proc targetproc $TARGET/proc
+    MOUNT_CLEANUP="$TARGET/proc $MOUNT_CLEANUP"
 fi
-if ! mount | grep targetsys; then
+if ! mount | grep "$TARGET/sys"; then
     mount -t sysfs targetsys $TARGET/sys
+    MOUNT_CLEANUP="$TARGET/sys $MOUNT_CLEANUP"
 fi
 
-mount --bind /cdrom $TARGET/cdrom
-mount --bind /dev $TARGET/dev
+if ! mount | grep "$TARGET/media/cdrom"; then
+    mount --bind /cdrom $TARGET/cdrom
+    MOUNT_CLEANUP="$TARGET/cdrom $MOUNT_CLEANUP"
+fi
+if ! mount | grep "$TARGET/dev"; then
+    mount --bind /dev $TARGET/dev
+    MOUNT_CLEANUP="$TARGET/dev $MOUNT_CLEANUP"
+fi
 
 # re-enable the cdrom for postinstall
 sed -i 's/^#deb\ cdrom/deb\ cdrom/' $TARGET/etc/apt/sources.list
 
 chroot $TARGET /cdrom/scripts/chroot-scripts/run_chroot
 
-umount $TARGET/cdrom
-umount $TARGET/proc
-umount $TARGET/sys
-# we're having an issue umounting dev
-# we'll try a lazy umount to detach the filesystem
-umount -l $TARGET/dev
+for mountpoint in $MOUNT_CLEANUP;
+do
+    umount -l $mountpoint
+done
+
 sync;sync
 
 # reset traps, as we are now exiting normally

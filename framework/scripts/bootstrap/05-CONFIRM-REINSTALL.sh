@@ -48,20 +48,21 @@ if grep -q DVDBOOT /proc/cmdline || ( grep -q REINSTALL /proc/cmdline && [ -e $B
     	/sbin/usplash_write "INPUT To proceed, please type: $CORRECT_ANSWER.  "
     	answer=$(cat /dev/.initramfs/usplash_outfifo)
     else
-        echo -e "\n\n"
-        echo -e "\n\n"
-        echo -e "\n\n"
-        echo -e "\n\n"
-        echo -e "\n\n"
-        echo -e 'WARNING!    WARNING!   WARNING!'
-        echo -e ""
-        echo -e "This operation will restore your system to the original factory"
-        echo -e "configuration. All personal files and changes on this system will be lost."
-        echo -e "That information will not be recoverable."
-        echo -e ""
-        echo -e "ALL DATA ON YOUR HARD DRIVES WILL BE PERMANENTLY AND IRRETRIEVABLY DESTROYED IF YOU CONTINUE.\n"
-        echo -e ""
-        echo -e "To proceed with the reinstallation, please type: $CORRECT_ANSWER"
+        chvt 5
+        echo -e "\n\n" > /dev/console
+        echo -e "\n\n" > /dev/console
+        echo -e "\n\n" > /dev/console
+        echo -e "\n\n" > /dev/console
+        echo -e "\n\n" > /dev/console
+        echo -e 'WARNING!    WARNING!   WARNING!' > dev/console
+        echo -e "" > /dev/console
+        echo -e "This operation will restore your system to the original factory" > /dev/console
+        echo -e "configuration. All personal files and changes on this system will be lost." > /dev/console
+        echo -e "That information will not be recoverable." > /dev/console
+        echo -e "" > /dev/console
+        echo -e "ALL DATA ON YOUR HARD DRIVES WILL BE PERMANENTLY AND IRRETRIEVABLY DESTROYED IF YOU CONTINUE.\n" > /dev/console
+        echo -e "" > /dev/console
+        echo -e "To proceed with the reinstallation, please type: $CORRECT_ANSWER" > /dev/console
         read -p      "Type any other text to abort: " answer > /dev/console 2>&1 < /dev/console
 	fi
 
@@ -80,6 +81,7 @@ if grep -q DVDBOOT /proc/cmdline || ( grep -q REINSTALL /proc/cmdline && [ -e $B
 			/sbin/usplash_write "TEXT-URGENT from the beginning."
 			/sbin/usplash_write "VERBOSE off"
 		else
+                        chvt 5
 			echo -e "\n\n" > /dev/console
 			echo "Continuing Installation. Hard Drive erasure begins in 10 seconds. Power off system to abort (last chance)..." > /dev/console
 			sleep 10
@@ -96,6 +98,7 @@ if grep -q DVDBOOT /proc/cmdline || ( grep -q REINSTALL /proc/cmdline && [ -e $B
 		/sbin/usplash_write "TEXT-URGENT Installation ABORTED.  System will reboot in 30 seconds"
 		/sbin/usplash_write "TEXT-URGENT NO CHANGES HAVE BEEN MADE TO YOUR HARD DRIVE."
 	else
+                chvt 5
 		echo "Installation ABORTED. System will reboot in 30 seconds." > /dev/console
 		echo "" > /dev/console
 		echo "NO CHANGES HAVE BEEN MADE TO THE HARD DISKS." > /dev/console

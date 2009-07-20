@@ -58,15 +58,24 @@ trap ". /cdrom/scripts/chroot-scripts/FAIL-SCRIPT" TERM INT HUP EXIT QUIT
 # Install FIST and Nobulate Here.
 # This way if we die early we'll RED Screen
 if ls /cdrom/debs/fist/*.deb > /dev/null 2>&1; then
-    umount /root || true
-    umount /mnt  || true
+    if mount | grep "/root"; then
+        umount /root
+    fi
+    if mount | grep "/mnt"; then
+        umount /mnt
+    fi
     $DPKG -i /cdrom/debs/fist/*.deb
     sync;sync
     [ -f /dell/fist/tal ] && /dell/fist/tal nobulate 0
 fi
 
-mount -t proc targetproc $TARGET/proc
-mount -t sysfs targetsys $TARGET/sys
+if ! mount | grep targetproc; then
+    mount -t proc targetproc $TARGET/proc
+fi
+if ! mount | grep targetsys; then
+    mount -t sysfs targetsys $TARGET/sys
+fi
+
 mount --bind /cdrom $TARGET/cdrom
 mount --bind /dev $TARGET/dev
 

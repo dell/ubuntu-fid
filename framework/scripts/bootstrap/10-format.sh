@@ -37,10 +37,12 @@ if ! grep -q INTERACTIVE /proc/cmdline; then
     chroot /root/ parted -s ${BOOTDEV} rm 4 || :
 
     # Install grub onto the RP
-    mount -t vfat ${BOOTDEV}${RP_PART_NUM} /root/boot
+    mount -o remount,rw /root/cdrom
+    mount -o bind /root/cdrom /root/boot
     chroot /root grub-install ${BOOTDEV}${RP_PART_NUM}
 
     # Cleanup
     umount /root/boot
+    mount -o remount,ro /root/cdrom
     umount /root/dev
 fi

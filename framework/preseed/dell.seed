@@ -122,15 +122,15 @@
 ### Boot loader installation
  # install grub
  # grub2 supports localization, which we want, but it needs to be in the pool
-  d-i grub-installer/grub2_instead_of_grub_legacy boolean false
+  d-i grub-installer/grub2_instead_of_grub_legacy boolean true
 
  # Don't install to the MBR, we install to PBR instead
   d-i grub-installer/only_debian boolean false
   d-i grub-installer/with_other_os boolean false
 
  # Install grub to the proper install-to partition.
- # for grub2 this needs to be changed to (hd0,3)
-  d-i grub-installer/bootdev  string (hd0,2)
+ # for grub1 this needs to be changed to (hd0,2)
+  d-i grub-installer/bootdev  string (hd0,3)
 
  # Don't let Ubiquity make our install-to partition active.  We'll do that
  # Ourselves later after the install is all done.

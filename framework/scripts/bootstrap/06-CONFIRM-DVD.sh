@@ -93,18 +93,8 @@ EOF
     cp /root/cdrom/* /root/cdrom/.disk /root/boot -R
 
     #add a bootloader to recovery partition
-    if chroot /root which grub; then
-        #we need to support grub1
-        cd /
-chroot /root grub <<-EOF
-    root (hd0,1)
-    setup (hd0,1)
-    quit
-EOF
-    else
-        #we are supporting grub2
-        chroot /root grub-install ${BOOTDEV}${RP_PART_NUM}
-    fi
+    chroot /root grub-install ${BOOTDEV}${RP_PART_NUM}
+
     #create a new UUID for the partition we
     #are dropping down to allow the user to
     #use this cd still to recover the system

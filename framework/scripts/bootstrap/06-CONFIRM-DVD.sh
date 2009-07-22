@@ -100,11 +100,6 @@ chroot /root grub <<-EOF
     quit
 EOF
 
-    #create a new UUID for the partition we
-    #are dropping down to allow the user to
-    #use this cd still to recover the system
-    chroot /root casper-new-uuid /cdrom/casper/initrd.gz /mnt/casper /mnt/.disk
-
     #clean up
     umount /root/dev
     umount /root/mnt

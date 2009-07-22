@@ -145,6 +145,7 @@
   d-i passwd/user-password-again password password
 
  # enable oem mode
+  d-i oem-config-udeb/frontend string gtk
   d-i oem-config/enable boolean true
   d-i oem-config/id string Dell Inc.
 

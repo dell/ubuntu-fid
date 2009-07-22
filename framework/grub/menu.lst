@@ -27,5 +27,5 @@
 timeout 0
 title Automatic reinstallation
   root (hd0,1)
-  kernel /install/vmlinuz preseed/file=/cdrom/preseed/dell.seed auto=true priority=critical cdrom-detect/try-hdd=true edd=on
+  kernel /install/vmlinuz preseed/file=/cdrom/preseed/dell.seed auto=true priority=critical cdrom-detect/try-hdd=true oem-config/enable=true edd=on
   initrd /install/initrd.gz

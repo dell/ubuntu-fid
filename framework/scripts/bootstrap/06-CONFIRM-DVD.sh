@@ -34,15 +34,21 @@ if grep -q DVDBOOT /proc/cmdline; then
     # /root/dev and /dev need to be in sync while we do this file
     mount -o bind /dev /root/dev
 
+    #kinda hacky because /root/cdrom can't exist, but does the trick
+    mount -o bind /cdrom /root/mnt
+
     #size of our UP, in bytes
-    utility_partition_size=`chroot /root gzip -l --quiet /cdrom/upimg.bin | awk '{ print \$2 }'`
+    utility_partition_size=`chroot /root gzip -l --quiet /mnt/upimg.bin | chroot /root awk '{ print \$2 }'`
     #size of our UP, in Mbytes (for fdisk)
     utility_partition_size=$((utility_partition_size/1048576))
 
     #size of our RP in kbytes
-    recovery_partition_size=`chroot /root du -s /cdrom | cut -f1`
+    recovery_partition_size=`chroot /root du -s /mnt | cut -f1`
     #size of our RP in MBytes with some 300M cushion (for fdisk)
     recovery_partition_size=$((recovery_partition_size/1024 + 300))
+
+    #unhack
+    umount /root/mnt
 
     #clear partition table up
     dd if=/dev/zero of=${BOOTDEV} bs=512 count=2
@@ -83,17 +89,18 @@ EOF
     dd if=/root/usr/lib/syslinux/mbr.bin of=${BOOTDEV} bs=446 count=1 conv=sync
 
     # restore file contents of UP
-    cat /root/cdrom/upimg.bin | gzip -d -c | dd of=${BOOTDEV}${UP_PART_NUM}
+    cat $ROOT/upimg.bin | chroot /root gzip -d -c | dd of=${BOOTDEV}${UP_PART_NUM}
 
     #create a recovery partition
     chroot /root mkfs.msdos -n install ${BOOTDEV}${RP_PART_NUM}
     mount -t vfat ${BOOTDEV}${RP_PART_NUM} /root/mnt
 
     #Copy files into recovery partition
-    cp /root/cdrom/* /root/cdrom/.disk /root/mnt -R
+    cp $ROOT/* $ROOT/.disk /root/mnt -R
 
     #add a bootloader to recovery partition
     cd /
+    export TERM=linux
 chroot /root grub <<-EOF
     root (hd0,1)
     setup (hd0,1)
@@ -106,7 +113,7 @@ EOF
     sync
 
     #eject the disk
-    eject -p -m /cdrom >/dev/null 2>&1 || true
+    chroot /root eject -p -m /cdrom >/dev/null 2>&1 || true
 
     #tell the user to reboot
     if grep -q splash /proc/cmdline; then
@@ -117,13 +124,14 @@ EOF
         /sbin/usplash_write "INPUTENTER Please remove this recovery media and press enter to reboot."
         answer=$(cat /dev/.initramfs/usplash_outfifo)
     else
-        echo -e "\n\n"
-        echo -e "\n\n"
-        echo -e "\n\n"
-        echo -e "\n\n"
-        echo -e "\n\n"
+        chvt 5
+        echo -e "\n\n" > /dev/console
+        echo -e "\n\n" > /dev/console
+        echo -e "\n\n" > /dev/console
+        echo -e "\n\n" > /dev/console
+        echo -e "\n\n" > /dev/console
         echo -e ""
-        echo -e ""Please remove this recovery media and press enter to reboot""
+        echo -e ""Please remove this recovery media and press enter to reboot"" > /dev/console
         read x < /dev/console
     fi
     reboot -n

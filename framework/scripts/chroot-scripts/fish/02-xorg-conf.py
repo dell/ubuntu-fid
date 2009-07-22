@@ -32,6 +32,7 @@ import fileinput
 import apt_pkg
 import subprocess
 import string
+import shutil
 
 apt_pkg.init()
 cache=apt_pkg.GetCache()
@@ -61,6 +62,7 @@ elif fglrx:
     jockey.close()
 
 if nvidia or fglrx:
+    shutil.copy('/cdrom/misc/xorg.conf.base', '/etc/X11/xorg.conf')
     #write our xorg.conf
     for line in fileinput.input(xorg_conf,inplace=1):
         print line[:-1]

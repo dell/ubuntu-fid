@@ -150,6 +150,17 @@ class ProcessJockey():
     def find_and_install_drivers(self):
         '''Uses jockey to detect and install necessary drivers'''
 
+        #check that dbus is running first (jockey hates us otherwise)
+        ret = subprocess.Popen(["/etc/init.d/dbus", "status"],stdout=subprocess.PIPE)
+        print ret.communicate()[0]
+        if ret.wait() != 0:
+            ret = subprocess.Popen(["/etc/init.d/dbus", "start"], stdout=subprocess.PIPE)
+            print ret.communicate()[0]
+            code = ret.wait()
+            if (code != 0):
+                print "Error starting dbus for Jockey"
+                exit(code)
+
         #call out jockey detection algorithms
         ret = subprocess.Popen(["jockey-text", "-l", "-m", "nonfree"],stdout=subprocess.PIPE)
         output = ret.communicate()[0]

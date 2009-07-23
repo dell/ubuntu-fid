@@ -95,12 +95,12 @@
                                         \
     dell ::                             \
                                         \
-        500 10000 1000000 ext3          \
+        500 10000 1000000 ext4          \
         $primary{ }                     \
         method{ format }                \
         format{ }                       \
         use_filesystem{ }               \
-        filesystem{ ext3 }              \
+        filesystem{ ext4 }              \
         mountpoint{ / } .               \
                                         \
         64 512 100% linux-swap          \

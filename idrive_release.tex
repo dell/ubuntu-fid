@@ -160,28 +160,28 @@ All Dell Ubuntu releases create a recovery partition that is between 3 and 5 GB.
 
 To add a release to a recovery partition, follow these steps:
 \begin{enumerate}
-\item Start with a system that has a clean installation of the Dell BTO image for the Ubuntu release in question
-\item Mount the recovery partition to /mnt using \texttt{sudo mount /dev/sda2 /mnt}
+\item Start with a system that has a clean installation of the Dell BTO image for the Ubuntu release in question.
+\item Mount the recovery partition to /mnt using: \texttt{sudo mount /dev/sda2 /mnt}
 \item Extract the I-drive release tarball over the recovery partition at /mnt.
-\item Reboot the system and in the GRUB2 menu, select to "Reinstall Operating System"
+\item Reboot the system and in the GRUB2 menu, select to "Reinstall Operating System".
 \end{enumerate}
 
 \subsection{Manual USB Injection}
 If you don't have a fresh copy of the BTO image loaded on the system in question, but have a spare flash drive, you can use USB Creator to help out.
 \begin{enumerate}
-\item Using USB Creator, copy the Dell BTO image for the Ubuntu release in question to your USB stick
+\item Using USB Creator, copy the Dell BTO image for the Ubuntu release in question to your USB stick.
 \item Double click the flash drive to open it up in a Nautilus window.
 \item Double click the I-drive tarball to open it up in File Roller.
-\item Copy the contents of the tarball onto the USB stick
-\item Install the system using this USB stick
+\item Copy the contents of the tarball onto the USB stick.
+\item Install the system using this USB stick.
 \end{enumerate}
 
 \subsection{Manual ISO Injection}
 As a last resort, you can manually extract the ISO and rebuild it using the command line.
 \begin{enumerate}
-\item Mount the ISO using \texttt{sudo mount -o loop FILE.iso /mnt}
-\item Create a temporary directory using \texttt{mktemp -d}
-\item Extract your I-Drive release in that directory
+\item Mount the ISO using: \texttt{sudo mount -o loop FILE.iso /mnt}
+\item Create a temporary directory using: \texttt{mktemp -d}
+\item Extract your I-Drive release in that directory.
 \item Rebuild the ISO substituting in your directory and this command: \texttt{genisoimage -o file.iso -input-charset utf-8 -b isolinux/isolinux.bin -c isolinux/boot.catalog -no-emul-boot -boot-load-size 4 -boot-info-table -pad -r -J -jolie-long -N -hide-jolie-trans-tbl -cache-inodes -l -publisher Dell Inc. -V Dell Ubuntu Reinstallation Media /mnt/ TEMPDIR/}
 \end{enumerate}
 

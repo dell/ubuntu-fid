@@ -107,7 +107,7 @@ For NVIDIA graphics, you will require four debs in this structure:
 
 
 \subsection{Updated core kernel drivers}
-If you require an updated driver that is built into the kernel image itself, you will have to obtain an updated kernel image from Kernel Engineers at Canonical.  If just a single module needs to be rev'ed, please see below in \textit{Updated Kernel Module}.  If you really \textbf{do} need to FISH an updated kernel package, follow these two steps:
+If you require an updated driver that is built into the kernel image itself, you will have to obtain an updated kernel image from Kernel Engineers at Canonical.  If just a single module needs to be rev'ed, please see below in \ref{kernel}.  If you really \textbf{do} need to FISH an updated kernel package, follow these two steps:
 \
 First, include the updated four debs in:
 \begin{itemize}
@@ -138,6 +138,7 @@ First, include the updated two debs in:
 Next, include an updated \texttt{./scripts/chroot-scripts/fish/04-kernel.py}.  Unfortunately, you will not be able to update the kernel and restricted driver in separate releases because they are tied together by an ABI version.  If you need to update the kernel too, be sure to place both together in the same release.
 
 \subsection{Updated Kernel Module}
+\label{kernel}
 If you are just providing an updated kernel module, it must be packaged via DKMS and placed in the generic debs directory, \texttt{./debs/main}.  It is important that you add a directive to the DKMS control file that indicates when the module is available in Ubuntu so that DKMS deactivates at the proper time in the field.
 Please look at these external documents for information on how to create DKMS packages:
 \linebreak 

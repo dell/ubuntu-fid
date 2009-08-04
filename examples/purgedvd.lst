@@ -8,9 +8,9 @@ pool/main/g/grub2
 pool/main/l/linux/
 pool/main/l/lzo2/
 pool/main/n/
-pool/main/o/oem-config
 pool/main/o/os-prober
 pool/main/p/patch
+pool/main/u/ubiquity
 pool/restricted/d
 pool/restricted/f
 pool/restricted/l

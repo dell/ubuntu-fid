@@ -4,7 +4,6 @@ dists
 isolinux
 pool/main/d/dkms
 pool/main/f/
-pool/main/g/grub2
 pool/main/l/linux/
 pool/main/l/lzo2/
 pool/main/n/

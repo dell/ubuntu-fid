@@ -1,14 +1,12 @@
-#!/bin/sh
+#!/usr/bin/python
 #
-#       <10-format.sh>
+#       <03-broadcom-wl.py>
 #
-#       Formats partitions prior to installation to ensure that oem.seed
-#       properly represents the system
+#       Prevents Jockey from needing to offer Broadcom when it's 
+#       already enabled
 #
 #       Copyright 2008 Dell Inc.
 #           Mario Limonciello <Mario_Limonciello@Dell.com>
-#           Hatim Amro <Hatim_Amro@Dell.com>
-#           Michael E Brown <Michael_E_Brown@Dell.com>
 #
 #       This program is free software; you can redistribute it and/or modify
 #       it under the terms of the GNU General Public License as published by
@@ -25,23 +23,14 @@
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
 
-if ! grep -q INTERACTIVE /proc/cmdline; then
-    # /root/dev and /dev need to be in sync while we do this file
-    mount -o bind /dev /root/dev
+import subprocess
 
-    # Mark RP bootable
-    chroot /root sfdisk -A${RP_PART_NUM} ${BOOTDEV}
+jockey_conf='/var/cache/jockey/check'
 
-    # * Delete partitions 3 & 4 since that's where we are installing to
-    chroot /root/ parted -s ${BOOTDEV} rm 3 || :
-    chroot /root/ parted -s ${BOOTDEV} rm 4 || :
-
-    # Install grub onto the RP
-    chroot /root grub <<-EOF
-root (hd0,1)
-setup (hd0,1)
-quit
-EOF
-
-    umount /root/dev
-fi
+output=subprocess.Popen(['lsmod'],stdout=subprocess.PIPE).communicate()
+for line in output:
+    if line and 'wl' in line:
+        jockey=open(jockey_conf,'a')
+        jockey.write('seen kmod:wl\n')
+        jockey.close()
+        break

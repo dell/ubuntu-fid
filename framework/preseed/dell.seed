@@ -95,12 +95,12 @@
                                         \
     dell ::                             \
                                         \
-        500 10000 1000000 ext4          \
+        500 10000 1000000 ext3          \
         $primary{ }                     \
         method{ format }                \
         format{ }                       \
         use_filesystem{ }               \
-        filesystem{ ext4 }              \
+        filesystem{ ext3 }              \
         mountpoint{ / } .               \
                                         \
         64 512 100% linux-swap          \
@@ -112,6 +112,9 @@
   d-i partman-basicfilesystems/no_swap boolean false
 
 ### Boot loader installation
+ # install grub2 (it supports localization, which we want)
+  d-i grub-installer/grub2_instead_of_grub_legacy boolean true
+
  # Don't install to the MBR, we install to PBR instead
   d-i grub-installer/only_debian boolean false
   d-i grub-installer/with_other_os boolean false
@@ -152,7 +155,11 @@
  # To calculate this list, use the following command on the DVD manifest:
  # cat filesystem.manifest  | grep ^lang | awk '{ print $1 }'  | grep -v writing | grep -v extra | grep -v translations | grep -v fonts | grep -v kde | grep -v env | grep -v base | less | grep -v selector | grep -v input | sed s/gnome-// | awk -F - '{ print $3 }' | sort | uniq | tr '\n' ' '
 
-  d-i pkgsel/language-packs string aa af am an ar as ast az be ber bg bn bo br bs ca crh cs csb cy da de dz el en eo es et eu fa fi fil fo fr fur fy ga gd gl gu gv ha he hi hr hsb hu hy ia id ig ii is it ja ka kk km kn ko ks ku kw ky la lg li lo lt lv mai mg mi mk ml mn mnc mr ms mt my nb nds ne nl nn no nr nso oc om or pa pap pl pt ro ru rw sa sc se shs si sk sl so sq sr ss st sv sw ta te tg th ti tk tl tn tr ts tt ug uk ur uz ve vi wa wo xh yi yo za zh zu
+# Removing languages to support 8GB SSD configurations, only six languages are supported.
+
+d-i pkgsel/language-packs string en es fr de pt zh
+
+#d-i pkgsel/language-packs string aa af am an ar as ast az be ber bg bn bo br bs ca crh cs csb cy da de dz el en eo es et eu fa fi fil fo fr fur fy ga gd gl gu gv ha he hi hr hsb hu hy ia id ig ii is it ja ka kk km kn ko ks ku kw ky la lg li lo lt lv mai mg mi mk ml mn mnc mr ms mt my nb nds ne nl nn no nr nso oc om or pa pap pl pt ro ru rw sa sc se shs si sk sl so sq sr ss st sv sw ta te tg th ti tk tl tn tr ts tt ug uk ur uz ve vi wa wo xh yi yo za zh zu
 
  # if we are using a CD, then only activate this one:
   #d-i pkgsel/language-packs string en

@@ -1,0 +1,115 @@
+\documentclass[letterpaper,10pt,titlepage]{article}
+
+%url support
+\usepackage{url}
+\usepackage[pdftex]{hyperref}
+\usepackage{nameref}
+\hypersetup{
+    colorlinks,%
+    citecolor=black,%
+    filecolor=black,%
+    linkcolor=black,%
+    urlcolor=black
+}
+
+%underscore w/o escape
+\usepackage{underscore}
+
+%pdf metadata and sizing
+\usepackage{ifpdf}
+\ifpdf
+\pdfinfo
+{ /Title (NVIDIA Ubuntu packaging guide)
+  /Author (Mario Limonciello)
+  /CreationDate (D:20090824042607) % this is the format used by pdf for date/time
+}
+\fi
+
+\title{\textbf{NVIDIA Ubuntu packaging guide}}
+\author{Mario Limonciello\\ Mario\_Limonciello@Dell.com}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+In the process of doing testing and development on Dell machines that contain NVIDIA graphics, you may need to update the NVIDIA graphics driver
+to one that is newer than already released.  This guide will help you through that process.
+
+\section{Check Versions}
+You'll want to be operating from an Ubuntu install to do these things.
+\begin{enumerate}
+\item Visit \url{https://launchpad.net/ubuntu/+source/nvidia-graphics-drivers-180}. This URL may change if the "source" package name changes at some point.
+\item Click on the latest version number.
+\item Is this version greater than or equal to the version you need?
+  \begin{itemize}
+    \item \textbf{Yes}, goto \nameref{grabbing}
+    \item \textbf{No},  goto \nameref{updating}
+  \end{itemize}
+\end{enumerate}
+
+\section{Grabbing a Build} \label{grabbing}
+Start out by clicking the i386 link of the builds on the right.  From that \textit{built files} section, you will need these packages:
+\begin{itemize}
+\item nvidia-185-kernel-source
+\item nvidia-185-libvdpau
+\item nvidia-185-modaliases
+\item nvidia-glx-185
+\end{itemize}
+Install these files on your system and test.  If your tests are successful, goto \nameref{building}.
+
+\section{Updating the version} \label{updating}
+\begin{enumerate}
+\item From the weblink you started at, download the \textbf{.orig.tar.gz}, \textbf{.diff.gz} and \textbf{.dsc} files.
+\item Install the dpkg-dev and devscripts packages without recommends.
+  \newline   
+  \texttt{ apt-get install dpkg-dev devscripts --no-install-recommends}
+\item Extract the ubuntu package using this command:
+  \newline 
+  \texttt{ dpkg-source -x *.dsc}
+\item Switch into the newly created directory
+\item Delete any existing .run files
+\item Download the NVIDIA 32 and 64 bit drivers from the NVIDIA website into the root of the newly created directory.
+\item Edit debian/upstream_info.  Particularly the \textbf{RELEASE}, \textbf{NEXTVER}, and any references to \textbf{pk0/pkg1} or \textbf{pkg1/pk2}.
+\item Update the debian/changelog using the dch tool: 
+  \newline 
+  \texttt{dch -v VERSION-0ubuntu0}
+  \begin {itemize}
+    \item \textit{VERSION} is the upstream version.
+    \item \textit{0ubuntu0} is explicitly what it said.  So for 185.18.36 it would be:
+    \item \texttt{dch -v 185.18.36-0ubuntu1}
+    \item  When the editor opens up, note that this is a \textit{New Upstream Version}.
+    \item  Make sure the release at the top (jaunty, karmic, hardy etc) is correct.
+    \item Save the file.
+  \end{itemize}
+
+\item Install the dependencies necessary to build:
+  \newline
+  \texttt{ apt-get build-dep nvidia-graphics-drivers-180}
+\item Build the package
+  \newline
+  \texttt{ debuild}
+\item From the generated debs you will need these:
+  \begin{itemize}
+    \item nvidia-185-kernel-source
+    \item nvidia-185-libvdpau
+    \item nvidia-185-modaliases
+    \item nvidia-glx-185
+  \end{itemize}
+\item Test the packages.
+\item If successful, goto \nameref{building}
+\end{enumerate}
+
+
+\section{Building an iDrive Release} \label{building}
+\begin{enumerate}
+\item Create this folder structure for the release
+ \texttt{mkdir -p debs/nvidia}
+\item Copy all of the necessary debs into that folder
+\item Create a gzipped tarball
+
+\end{enumerate}
+\end{document}

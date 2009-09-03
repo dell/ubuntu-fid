@@ -53,7 +53,7 @@ if grep -q DVDBOOT /proc/cmdline; then
     # create RP
     # set RP to type vfat
     # set RP to bootable
-    chroot /root/ fdisk ${BOOTDEV} <<EOF
+    chroot /root/ fdisk ${BOOTDEV} <<EOF || true
 n
 p
 ${UP_PART_NUM}

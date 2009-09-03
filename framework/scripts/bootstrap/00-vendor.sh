@@ -22,7 +22,7 @@
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
 
-if ! chroot /root dmidecode | grep "Vendor: Dell" 2>&1 >/dev/null; then
+if ! chroot /root dmidecode | grep -i "Vendor: Dell" 2>&1 >/dev/null; then
 	if grep -q splash /proc/cmdline; then
 		/sbin/usplash_write "CLEAR"
 		/sbin/usplash_write "TEXT-URGENT This disk is only valid for Dell systems."

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 #       <chroot.sh>
 #
@@ -29,8 +29,20 @@
 set -x
 set -e
 
-exec > /target/var/log/installer/chroot.sh.log 2>&1
-chattr +a /target/var/log/installer/chroot.sh.log
+. /cdrom/scripts/environ.sh
+
+LOG="var/log"
+DPKG=dpkg
+if [ -d "$TARGET/$LOG/installer" ]; then
+    LOG="$LOG/installer"
+fi
+if [ -x /usr/bin/udpkg ]; then
+    DPKG=udpkg
+fi
+export LOG
+
+exec > $TARGET/$LOG/chroot.sh.log 2>&1
+chroot $TARGET chattr +a $LOG/chroot.sh.log
 
 echo "in $0"
 
@@ -42,32 +54,50 @@ fi
 # Execute FAIL-SCRIPT if we exit for any reason (abnormally)
 trap ". /cdrom/scripts/chroot-scripts/FAIL-SCRIPT" TERM INT HUP EXIT QUIT
 
-. /cdrom/scripts/environ.sh
 
 # Install FIST and Nobulate Here.
 # This way if we die early we'll RED Screen
 if ls /cdrom/debs/fist/*.deb > /dev/null 2>&1; then
-    dpkg -i /cdrom/debs/fist/*.deb
+    if mount | grep "/root"; then
+        umount /root
+    fi
+    if mount | grep "/mnt"; then
+        umount /mnt
+    fi
+    $DPKG -i /cdrom/debs/fist/*.deb
     sync;sync
     [ -f /dell/fist/tal ] && /dell/fist/tal nobulate 0
 fi
 
-mount -t proc targetproc /target/proc
-mount -t sysfs targetsys /target/sys
-mount --bind /cdrom /target/cdrom
-mount --bind /dev /target/dev
+MOUNT_CLEANUP=
+if ! mount | grep "$TARGET/proc"; then
+    mount -t proc targetproc $TARGET/proc
+    MOUNT_CLEANUP="$TARGET/proc $MOUNT_CLEANUP"
+fi
+if ! mount | grep "$TARGET/sys"; then
+    mount -t sysfs targetsys $TARGET/sys
+    MOUNT_CLEANUP="$TARGET/sys $MOUNT_CLEANUP"
+fi
+
+if ! mount | grep "$TARGET/media/cdrom"; then
+    mount --bind /cdrom $TARGET/cdrom
+    MOUNT_CLEANUP="$TARGET/cdrom $MOUNT_CLEANUP"
+fi
+if ! mount | grep "$TARGET/dev"; then
+    mount --bind /dev $TARGET/dev
+    MOUNT_CLEANUP="$TARGET/dev $MOUNT_CLEANUP"
+fi
 
 # re-enable the cdrom for postinstall
-sed -i 's/^#deb\ cdrom/deb\ cdrom/' /target/etc/apt/sources.list
+sed -i 's/^#deb\ cdrom/deb\ cdrom/' $TARGET/etc/apt/sources.list
 
-chroot /target /cdrom/scripts/chroot-scripts/run_chroot
+chroot $TARGET /cdrom/scripts/chroot-scripts/run_chroot
 
-umount /target/cdrom
-umount /target/proc
-umount /target/sys
-# we're having an issue umounting dev
-# we'll try a lazy umount to detach the filesystem
-umount -l /target/dev
+for mountpoint in $MOUNT_CLEANUP;
+do
+    umount -l $mountpoint
+done
+
 sync;sync
 
 # reset traps, as we are now exiting normally

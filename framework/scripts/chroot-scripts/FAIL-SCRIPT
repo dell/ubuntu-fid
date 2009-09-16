@@ -25,7 +25,7 @@
 #       MA 02110-1301, USA.
 
 # BE AWARE THAT THIS SCRIPT IS CALLED FROM OUTSIDE THE CHROOT.
-# The OS is mounted under /target
+# The OS is mounted under $TARGET
 
 . /cdrom/scripts/chroot-scripts/fifuncs "target"
 
@@ -39,9 +39,8 @@ ln -s /proc/mounts /etc/mtab
 mount -o remount,rw /cdrom
 
 IFHALT "Reporting logs to DMP"
-cp -f /target/var/log/installer/chroot.sh.log /tmp/fist.err
+cp -f $TARGET/$LOG/chroot.sh.log /tmp/fist.err
 [ -f /dell/fist/tal ] && /dell/fist/tal PutFiles /tmp/fist.err
 sync
-dpkg -r fist
 
 IFHALT "(FAIL) Report to FI logs.. Done!"

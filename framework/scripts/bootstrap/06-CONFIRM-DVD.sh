@@ -83,14 +83,14 @@ EOF
     dd if=/root/usr/lib/syslinux/mbr.bin of=${BOOTDEV} bs=446 count=1 conv=sync
 
     # restore file contents of UP
-    cat /root/cdrom/upimg.bin | chroot /root gzip -d -c | dd of=${BOOTDEV}${UP_PART_NUM}
+    cat $ROOT/upimg.bin | chroot /root gzip -d -c | dd of=${BOOTDEV}${UP_PART_NUM}
 
     #create a recovery partition
     chroot /root mkfs.msdos -n install ${BOOTDEV}${RP_PART_NUM}
     mount -t vfat ${BOOTDEV}${RP_PART_NUM} /root/boot
 
     #Copy files into recovery partition
-    cp /root/cdrom/* /root/cdrom/.disk /root/boot -R
+    cp $ROOT/* $ROOT/.disk /root/boot -R
 
     #add a bootloader to recovery partition
     chroot /root grub-install ${BOOTDEV}${RP_PART_NUM}
@@ -117,13 +117,14 @@ EOF
         /sbin/usplash_write "INPUTENTER Please remove this recovery media and press enter to reboot."
         answer=$(cat /dev/.initramfs/usplash_outfifo)
     else
-        echo -e "\n\n"
-        echo -e "\n\n"
-        echo -e "\n\n"
-        echo -e "\n\n"
-        echo -e "\n\n"
+        chvt 5
+        echo -e "\n\n" > /dev/console
+        echo -e "\n\n" > /dev/console
+        echo -e "\n\n" > /dev/console
+        echo -e "\n\n" > /dev/console
+        echo -e "\n\n" > /dev/console
         echo -e ""
-        echo -e ""Please remove this recovery media and press enter to reboot""
+        echo -e ""Please remove this recovery media and press enter to reboot"" > /dev/console
         read x < /dev/console
     fi
     reboot -n

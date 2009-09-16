@@ -25,6 +25,8 @@
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
 
+export TARGET=/target
+
 export ORIGPATH=$PATH
 export PATH=$PATH:/tmp/scripts/bin
 export LD_LIBRARY_PATH=/tmp/scripts/lib/

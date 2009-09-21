@@ -71,6 +71,10 @@ fi
 
 mount --bind /dev $TARGET/dev
 MOUNT_CLEANUP="$TARGET/dev $MOUNT_CLEANUP"
+if ! mount | grep "$TARGET/var/run"; then
+    mount --bind /var/run $TARGET/var/run
+    MOUNT_CLEANUP="$TARGET/var/run $MOUNT_CLEANUP"
+fi
 if ! mount | grep "$TARGET/proc"; then
     mount -t proc targetproc $TARGET/proc
     MOUNT_CLEANUP="$TARGET/proc $MOUNT_CLEANUP"

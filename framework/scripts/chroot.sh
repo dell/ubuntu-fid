@@ -69,7 +69,8 @@ if ls /cdrom/debs/fist/*.deb > /dev/null 2>&1; then
     [ -f /dell/fist/tal ] && /dell/fist/tal nobulate 0
 fi
 
-MOUNT_CLEANUP=
+mount --bind /dev $TARGET/dev
+MOUNT_CLEANUP="$TARGET/dev $MOUNT_CLEANUP"
 if ! mount | grep "$TARGET/proc"; then
     mount -t proc targetproc $TARGET/proc
     MOUNT_CLEANUP="$TARGET/proc $MOUNT_CLEANUP"
@@ -82,10 +83,6 @@ fi
 if ! mount | grep "$TARGET/media/cdrom"; then
     mount --bind /cdrom $TARGET/cdrom
     MOUNT_CLEANUP="$TARGET/cdrom $MOUNT_CLEANUP"
-fi
-if ! mount | grep "$TARGET/dev"; then
-    mount --bind /dev $TARGET/dev
-    MOUNT_CLEANUP="$TARGET/dev $MOUNT_CLEANUP"
 fi
 
 # re-enable the cdrom for postinstall

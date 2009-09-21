@@ -13,7 +13,7 @@
 
 #        * Framework enablement
 #
-#       Copyright 2009 Dell Inc.
+#       Copyright 2008-2009 Dell Inc.
 #           Mario Limonciello <Mario_Limonciello@Dell.com>
 #           Hatim Amro <Hatim_Amro@Dell.com>
 #           Michael E Brown <Michael_E_Brown@Dell.com>
@@ -102,11 +102,7 @@
  # Preload language packages
  # These are all included on the DVD already in a preinstalled format.
  # We *save* time by letting them all stay preinstalled
-
- # To calculate this list, use the following command on the DVD manifest:
- # cat filesystem.manifest  | grep ^lang | awk '{ print $1 }'  | grep -v writing | grep -v extra | grep -v translations | grep -v fonts | grep -v kde | grep -v env | grep -v base | less | grep -v selector | grep -v input | sed s/gnome-// | awk -F - '{ print $3 }' | sort | uniq | tr '\n' ' '
-
-  d-i pkgsel/language-packs string aa af am an ar as ast az be ber bg bn bo br bs ca crh cs csb cy da de dz el en eo es et eu fa fi fil fo fr fur fy ga gd gl gu gv ha he hi hr hsb hu hy ia id ig ii is it ja ka kk km kn ko ks ku kw ky la lg li lo lt lv mai mg mi mk ml mn mnc mr ms mt my nb nds ne nl nn no nr nso oc om or pa pap pl pt ro ru rw sa sc se shs si sk sl so sq sr ss st sv sw ta te tg th ti tk tl tn tr ts tt ug uk ur uz ve vi wa wo xh yi yo za zh zu
+  d-i pkgsel/language-packs string ALL
 
  # if we are using a CD, then only activate this one:
   #d-i pkgsel/language-packs string en

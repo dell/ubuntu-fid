@@ -109,7 +109,7 @@ EOF
     eject -p -m /cdrom >/dev/null 2>&1 || true
 
     #tell the user to reboot
-    if grep -q splash /proc/cmdline; then
+    if grep -q splash /proc/cmdline && [ -f /dev/.initramfs/usplash_outfifo ]; then
         /sbin/usplash_write "TIMEOUT 0"
         /sbin/usplash_write "VERBOSE on"
         /sbin/usplash_write "CLEAR"

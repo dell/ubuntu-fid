@@ -37,7 +37,7 @@ if grep -q DVDBOOT /proc/cmdline || ( grep -q REINSTALL /proc/cmdline && [ -e $B
     set +x
     CORRECT_ANSWER="ERASE"
 
-    if grep -q splash /proc/cmdline; then
+    if grep -q splash /proc/cmdline && [ -f /dev/.initramfs/usplash_outfifo ]; then
     	/sbin/usplash_write "TIMEOUT 0"
     	/sbin/usplash_write "VERBOSE on"
 		/sbin/usplash_write "TEXT-URGENT ---WARNING---"
@@ -66,8 +66,8 @@ if grep -q DVDBOOT /proc/cmdline || ( grep -q REINSTALL /proc/cmdline && [ -e $B
         read -p      "Type any other text to abort: " answer > /dev/console 2>&1 < /dev/console
 	fi
 
-    if [ "$answer" = "$CORRECT_ANSWER" ]; then
-	    if grep -q splash /proc/cmdline; then
+	if [ "$answer" = "$CORRECT_ANSWER" ]; then
+		if grep -q splash /proc/cmdline && [ -f /dev/.initramfs/usplash_outfifo ]; then
 			/sbin/usplash_write "CLEAR"
 			/sbin/usplash_write "TEXT-URGENT Continuing installation.  Hard drive erasure will"
 			/sbin/usplash_write "TEXT-URGENT begin in 10 seconds. Power off system to abort"
@@ -89,11 +89,11 @@ if grep -q DVDBOOT /proc/cmdline || ( grep -q REINSTALL /proc/cmdline && [ -e $B
 			echo -e "If your system loses power during install, install normally will restart from the beginning." > /dev/console
 			echo -e "\n\n" > /dev/console
 		fi
-        set -x
-        return
-    fi
+        	set -x
+        	return
+	fi
 
-	if grep -q splash /proc/cmdline; then
+	if grep -q splash /proc/cmdline && [ -f /dev/.initramfs/usplash_outfifo ]; then
 		/sbin/usplash_write "CLEAR"
 		/sbin/usplash_write "TEXT-URGENT Installation ABORTED.  System will reboot in 30 seconds"
 		/sbin/usplash_write "TEXT-URGENT NO CHANGES HAVE BEEN MADE TO YOUR HARD DRIVE."
@@ -103,6 +103,6 @@ if grep -q DVDBOOT /proc/cmdline || ( grep -q REINSTALL /proc/cmdline && [ -e $B
 		echo "" > /dev/console
 		echo "NO CHANGES HAVE BEEN MADE TO THE HARD DISKS." > /dev/console
 	fi
-    sleep 30
-    while true; do reboot -fn; done
+	sleep 30
+	while true; do reboot -fn; done
 fi

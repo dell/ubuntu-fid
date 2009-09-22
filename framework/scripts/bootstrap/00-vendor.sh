@@ -23,14 +23,14 @@
 #       MA 02110-1301, USA.
 
 if ! chroot /root dmidecode | grep -i "Vendor: Dell" 2>&1 >/dev/null; then
-	if grep -q splash /proc/cmdline; then
-		/sbin/usplash_write "CLEAR"
-		/sbin/usplash_write "TEXT-URGENT This disk is only valid for Dell systems."
-		/sbin/usplash_write "TEXT-URGENT System will reboot in 30 seconds."
-	else
-		echo "This disk is only valid for Dell systems. " > /dev/console
-                echo "System will reboot in 30 seconds." > /dev/console
-	fi
-	sleep 30
-	while true; do reboot -fn; done
+    if grep -q splash /proc/cmdline; then
+        /sbin/usplash_write "CLEAR"
+        /sbin/usplash_write "TEXT-URGENT This disk is only valid for Dell systems."
+        /sbin/usplash_write "TEXT-URGENT System will reboot in 30 seconds."
+    else
+        echo "This disk is only valid for Dell systems. " > /dev/console
+        echo "System will reboot in 30 seconds." > /dev/console
+    fi
+    sleep 30
+    while true; do reboot -fn; done
 fi

@@ -150,24 +150,19 @@ class ProcessJockey():
     def find_and_install_drivers(self):
         '''Uses jockey to detect and install necessary drivers'''
 
-        #check that dbus is running first (jockey hates us otherwise)
-        ret = subprocess.Popen(["status", "dbus"],stdout=subprocess.PIPE)
-        print ret.communicate()[0]
-        if ret.wait() != 0:
-            ret = subprocess.Popen(["service", "dbus", "start"], stdout=subprocess.PIPE)
-            print ret.communicate()[0]
-            code = ret.wait()
-            if (code != 0):
-                print "Error starting dbus for Jockey"
-                exit(code)
-
+        #spawn jockey backend inside the chroot (if we let service activation do it, it would be outside the chroot)
+        backend = subprocess.Popen(["/usr/share/jockey/jockey-backend"])
+        code = backend.poll()
+        if (code and code != 0):
+            print "Error starting jockey backend"
+            exit(code)
+      
         #call out jockey detection algorithms
         ret = subprocess.Popen(["jockey-text", "-l", "-m", "nonfree"],stdout=subprocess.PIPE)
         output = ret.communicate()[0]
         code = ret.wait()
         if (code != 0):
             print "jockey returned a non-zero return code"
-            exit(code)
         output = output.split('\n')
 
         #Build and array of things to install
@@ -196,9 +191,12 @@ class ProcessJockey():
                 code = ret.wait()
                 if (code != 0):
                     print "Error installing: %s" % item
-                    exit(code)
         else:
             print "No Jockey supported drivers necessary"
+
+        backend.terminate()
+        if code:
+            exit(code)
 
 if __name__ == "__main__":
     processor = ProcessJockey()

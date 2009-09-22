@@ -85,7 +85,7 @@ if grep -q DVDBOOT /proc/cmdline || ( grep -q REINSTALL /proc/cmdline && [ -e $B
 			echo -e "\n\n" > /dev/console
 			echo "Continuing Installation. Hard Drive erasure begins in 10 seconds. Power off system to abort (last chance)..." > /dev/console
 			sleep 10
-			echo -e "\n\nInstallation in progress. The installation will take at least 15 minutes. It may take more time depending on the size of the hard drive. It usually takes approximately 5 minutes per 100GB of hard disk storage, plus 10 minutes.\n\n" > /dev/console
+			echo -e "\n\nInstallation in progress. This process will take between 15 to 60 minutes.\n\n" > /dev/console
 			echo -e "If your system loses power during install, install normally will restart from the beginning." > /dev/console
 			echo -e "\n\n" > /dev/console
 		fi

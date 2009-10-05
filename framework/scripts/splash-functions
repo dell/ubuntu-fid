@@ -1,0 +1,108 @@
+# Usplash hooks for /lib/init/splash-functions-base
+
+# Internal function, do not use in external scripts
+usplash_pidfound()
+{
+	pidof usplash > /dev/null 2>&1 || return 1
+	return 0
+}
+
+splash_running()
+{
+	if [ -x /sbin/usplash ] && usplash_pidfound; then
+		return 0
+	fi
+	return 1
+}
+
+splash_stop()
+{
+	local i
+
+	splash_running || return 0
+
+	export SPLASH_ORIG_CONSOLE="$(fgconsole)"
+
+	# Clear VT 8 of any console messages
+	clear >/dev/tty8
+
+	# Ask usplash to go away
+	/sbin/usplash_write QUIT
+
+	# Wait until it is gone or forcibly kill it
+	i=0
+	while usplash_pidfound; do
+		i=$(($i + 1))
+		if [ $i -gt 100 ]; then
+			kill -9 $(pidof usplash)
+			break
+		fi
+		sleep 0.1
+	done
+
+	# Reset virtual consoles if necessary
+	if ! type setupcon >/dev/null 2>&1 && \
+	   [ -x /etc/init.d/console-screen.sh ]; then
+		/etc/init.d/console-screen.sh start
+	fi
+
+	return 0
+}
+
+splash_start()
+{
+	if splash_running; then
+		return 0
+	elif [ ! -x /sbin/usplash ] || [ ! -x /sbin/usplash_down ]; then
+		return 1
+	fi
+
+	/sbin/usplash_down || return 1
+	return 0
+}
+
+custom_splash_progress()
+{
+	splash_running || return 0
+	/sbin/usplash_write "PROGRESS $1" || return 1
+	return 0
+}
+
+splash_start_indefinite()
+{
+	splash_running || return 0
+	# TIMOUT 0 is not indefinite
+	/sbin/usplash_write "TIMEOUT 600" || return 1
+	/sbin/usplash_write "PULSATE" || return 1
+	return 0
+}
+
+splash_stop_indefinite()
+{
+	splash_running || return 0
+	/sbin/usplash_write "TIMEOUT 15" || return 1
+	return 0
+}
+
+splash_user_input()
+{
+	splash_running || return 1
+	[ -p /dev/.initramfs/usplash_outfifo ] || return 1
+
+	case "$2" in
+		regular)
+		/sbin/usplash_write "INPUT $1" || return 1
+		;;
+		password)
+		/sbin/usplash_write "INPUTQUIET $1" || return 1
+		;;
+		enter)
+		/sbin/usplash_write "INPUTENTER $1" || return 1
+		;;
+		*)
+		return 1
+		;;
+	esac
+	cat /dev/.initramfs/usplash_outfifo 2> /dev/null || return 1
+	return 0
+}

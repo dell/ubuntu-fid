@@ -34,8 +34,8 @@ if grep -q DVDBOOT /proc/cmdline || ( grep -q REINSTALL /proc/cmdline && [ -e $B
     set +x
     CORRECT_ANSWER="ERASE"
 
-    if grep -q splash /proc/cmdline && [ -f /dev/.initramfs/usplash_outfifo ]; then
-        /sbin/usplash_write "TIMEOUT 0"
+    if splash_running; then
+        splash_start_indefinite
         /sbin/usplash_write "VERBOSE on"
         /sbin/usplash_write "TEXT-URGENT ---WARNING---"
         /sbin/usplash_write "TEXT-URGENT This operation will restore your system to the original factory"
@@ -64,7 +64,7 @@ if grep -q DVDBOOT /proc/cmdline || ( grep -q REINSTALL /proc/cmdline && [ -e $B
     fi
 
     if [ "$answer" = "$CORRECT_ANSWER" ]; then
-        if grep -q splash /proc/cmdline && [ -f /dev/.initramfs/usplash_outfifo ]; then
+        if splash_running; then
             /sbin/usplash_write "CLEAR"
             /sbin/usplash_write "TEXT-URGENT Continuing installation.  Hard drive erasure will"
             /sbin/usplash_write "TEXT-URGENT begin in 10 seconds. Power off system to abort"
@@ -90,7 +90,7 @@ if grep -q DVDBOOT /proc/cmdline || ( grep -q REINSTALL /proc/cmdline && [ -e $B
         return
     fi
 
-    if grep -q splash /proc/cmdline && [ -f /dev/.initramfs/usplash_outfifo ]; then
+    if splash_running; then
         /sbin/usplash_write "CLEAR"
         /sbin/usplash_write "TEXT-URGENT Installation ABORTED.  System will reboot in 30 seconds"
         /sbin/usplash_write "TEXT-URGENT NO CHANGES HAVE BEEN MADE TO YOUR HARD DRIVE."

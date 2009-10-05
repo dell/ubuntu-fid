@@ -45,6 +45,9 @@ trap ". $ROOT/scripts/bootstrap/FAIL-SCRIPT" TERM INT HUP EXIT QUIT
 
 . $ROOT/scripts/environ.sh
 
+# start splash in case it isn't started yet
+splash_start
+
 for i in $ROOT/scripts/bootstrap/*.sh;
 do
     echo "running bootstrap script: $i"  > /dev/tty12

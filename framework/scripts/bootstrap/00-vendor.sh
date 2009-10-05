@@ -22,12 +22,14 @@
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
 
+
 if ! chroot /root dmidecode | grep -i "Vendor: Dell" 2>&1 >/dev/null; then
-    if grep -q splash /proc/cmdline && [ -f /dev/.initramfs/usplash_outfifo ]; then
+    if splash_running; then
         /sbin/usplash_write "CLEAR"
         /sbin/usplash_write "TEXT-URGENT This disk is only valid for Dell systems."
         /sbin/usplash_write "TEXT-URGENT System will reboot in 30 seconds."
     else
+        chvt 5
         echo "This disk is only valid for Dell systems. " > /dev/console
         echo "System will reboot in 30 seconds." > /dev/console
     fi

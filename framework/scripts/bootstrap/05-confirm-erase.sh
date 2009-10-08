@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-#       <05-CONFIRM-REINSTALL.sh>
+#       <05-confirm-erase.sh>
 #
 #       Queries the user to perform the reinstallation.
 #       All steps beyond this step may be destructive.

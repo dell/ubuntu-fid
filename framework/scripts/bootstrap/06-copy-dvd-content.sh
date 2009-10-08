@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-#       <06-CONFIRM-DVD.sh>
+#       <06-copy-dvd-content.sh>
 #
 #       Determines whether the user has booted from DVD
 #       If so:

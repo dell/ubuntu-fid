@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-#       <00-vendor.sh>
+#       <00-check-vendor.sh>
 #
 #       Ensures that recovery media is running on a Dell system
 #

@@ -23,7 +23,8 @@
 #       MA 02110-1301, USA.
 
 
-if ! chroot /root dmidecode | grep -i "Vendor: Dell" 2>&1 >/dev/null; then
+if ! chroot /root dmidecode | grep -i "Vendor: Dell" 2>&1 >/dev/null &&
+   ! chroot /root dmidecode | grep -i "Vendor: innotek" 2>&1 >/dev/null; then
     if splash_running; then
         /sbin/usplash_write "CLEAR"
         /sbin/usplash_write "TEXT-URGENT This disk is only valid for Dell systems."

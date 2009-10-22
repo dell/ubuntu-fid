@@ -35,11 +35,12 @@
 # from 5:30 to 5
 # ==== Do we need to change this???
 
-
-# Copy /cdrom/misc/tz_offset.py to /etc/init.d/tz_offset.py
-cp -f /cdrom/misc/tz_offset.py /etc/init.d/tz_offset.py
-cp -f /cdrom/misc/run-tz-fix /etc/init.d/run-tz-fix
-chmod +x /etc/init.d/tz_offset.py
-chmod +x /etc/init.d/run-tz-fix
-# link it to /etc/rc2.d/S02_force_utc
-ln -s /etc/init.d/run-tz-fix /etc/rc2.d/S02_force_utc
+if [ -f /cdrom/misc/tz_offset.py ] && [ -f /cdrom/misc/run-tz-fix ]; then
+    # Copy /cdrom/misc/tz_offset.py to /etc/init.d/tz_offset.py
+    cp -f /cdrom/misc/tz_offset.py /etc/init.d/tz_offset.py
+    cp -f /cdrom/misc/run-tz-fix /etc/init.d/run-tz-fix
+    chmod +x /etc/init.d/tz_offset.py
+    chmod +x /etc/init.d/run-tz-fix
+    # link it to /etc/rc2.d/S02_force_utc
+    ln -s /etc/init.d/run-tz-fix /etc/rc2.d/S02_force_utc
+fi

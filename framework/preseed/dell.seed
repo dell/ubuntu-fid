@@ -2,7 +2,7 @@
 #       <dell.seed>
 #
 #       Dell Ubuntu preseed file used for FI installs
-#        * Last updated for Ubuntu 9.04
+#        * Last updated for Ubuntu 9.10
 #
 #       Sets all of the defaults for the Ubuntu installation
 #        * Keyboard
@@ -62,7 +62,7 @@
  # values set here. However, setting the values still prevents the questions
  # from being shown, even if values come from dhcp.
   d-i netcfg/get_hostname string dell-desktop
-  d-i netcfg/get_domain string example.com
+  d-i netcfg/get_domain string
 
 ### Mirror settings
 

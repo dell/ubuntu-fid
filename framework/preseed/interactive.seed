@@ -62,7 +62,7 @@
  # values set here. However, setting the values still prevents the questions
  # from being shown, even if values come from dhcp.
   d-i netcfg/get_hostname string dell-desktop
-  d-i netcfg/get_domain string example.com
+  d-i netcfg/get_domain string
 
 ### Mirror settings
 

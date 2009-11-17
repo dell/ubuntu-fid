@@ -24,7 +24,7 @@
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
 
-if !splash_running; then
+if ! splash_running; then
     chvt 1
 fi
 echo "SUCCESSFULLY PASSED BOOTSTRAP." > /dev/tty1

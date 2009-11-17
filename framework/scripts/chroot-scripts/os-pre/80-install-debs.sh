@@ -29,6 +29,6 @@
 IFHALT "Installing debs from debs/main"
 
 if ls /cdrom/debs/main/*.deb > /dev/null 2>&1; then
-    dpkg -i /cdrom/debs/main/*.deb
+    dpkg -G -i /cdrom/debs/main/*.deb
 fi
 

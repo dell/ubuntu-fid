@@ -150,6 +150,9 @@
  # We *save* time by letting them all stay preinstalled
   d-i pkgsel/language-packs string ALL
 
+ # Don't show incomplete language support message
+  d-i pkgsel/ignore-incomplete-language-support boolean true
+
  # if we are using a CD, then only activate this one:
   #d-i pkgsel/language-packs string en
 

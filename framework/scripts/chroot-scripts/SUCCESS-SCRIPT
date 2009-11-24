@@ -49,12 +49,6 @@ rm -rf /cdrom/dellrmk.bin
 rm -rf /cdrom/linld.com
 rm -rf /cdrom/cmd.cfg
 
-IFHALT "Clean up FID FAIL & SUCCESS scripts..."
-rm -rf /cdrom/scripts/chroot-scripts/FAIL-SCRIPT
-echo -e "#!/bin/sh\n# Fail code goes here..." > /cdrom/scripts/chroot-scripts/FAIL-SCRIPT
-rm -rf /cdrom/scripts/chroot-scripts/SUCCESS-SCRIPT
-echo -e "#!/bin/sh\n# Success code goes here..." > /cdrom/scripts/chroot-scripts/SUCCESS-SCRIPT
-
 IFHALT "Remove Bad line in /etc/fstab"
 sed -i '/\/dev\/sda2/d' $TARGET/etc/fstab
 
@@ -66,5 +60,23 @@ if [ -f /dell/fist/tal ]; then
 	rm -rf /dell
 	rm -rf /cdrom/debs/fist
 fi
+
+IFHALT "Clean up FID FAIL & SUCCESS scripts..."
+rm -rf /cdrom/scripts/chroot-scripts/FAIL-SCRIPT
+echo -e "#!/bin/sh\n# Fail code goes here..." > /cdrom/scripts/chroot-scripts/FAIL-SCRIPT
+rm -rf /cdrom/scripts/chroot-scripts/SUCCESS-SCRIPT
+cat > /cdrom/scripts/chroot-scripts/SUCCESS-SCRIPT << EOF
+. /cdrom/scripts/chroot-scripts/fifuncs "target"
+set -x
+
+IFHALT "Resetting grub fail state"
+[ -s /cdrom/grub/grubenv ] || rm -f /cdrom/grub/grubenv
+mkdir -p /cdrom/grub
+grub-editenv /cdrom/grub/grubenv unset recordfail
+EOF
+
+#We don't need to set this executable because on FAT32
+#everything is already executable
+/cdrom/scripts/chroot-scripts/SUCCESS-SCRIPT
 
 IFHALT "SUCCESS-SCRIPT is Done!"

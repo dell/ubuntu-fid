@@ -1,15 +1,15 @@
 #!/bin/sh
 #
-#       <06-copy-dvd-content.sh>
+#       <06-copy-content-to-rp.sh>
 #
-#       Determines whether the user has booted from DVD
+#       Determines whether the user has booted from recovery media
 #       If so:
-#           1) Wipes the rest of the disk
+#           1) Wipes the the disk
 #           2) Copies the contents of the MBR
 #           3) Populates the recovery partition
 #           4) Modifies to recovery partition UUID
 #
-#       Copyright 2008 Dell Inc.
+#       Copyright 2008-2009 Dell Inc.
 #           Mario Limonciello <Mario_Limonciello@Dell.com>
 #           Hatim Amro <Hatim_Amro@Dell.com>
 #           Michael E Brown <Michael_E_Brown@Dell.com>

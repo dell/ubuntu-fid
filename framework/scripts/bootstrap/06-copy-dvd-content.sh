@@ -93,7 +93,7 @@ EOF
     cp $ROOT/* $ROOT/.disk /root/boot -R
 
     #add a bootloader to recovery partition
-    chroot /root grub-install ${BOOTDEV}${RP_PART_NUM}
+    chroot /root grub-install --force ${BOOTDEV}${RP_PART_NUM}
 
     #create a new UUID for the partition we
     #are dropping down to allow the user to

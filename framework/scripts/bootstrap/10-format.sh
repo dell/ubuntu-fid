@@ -39,7 +39,7 @@ if ! grep -q INTERACTIVE /proc/cmdline; then
     # Install grub onto the RP
     mount -o remount,rw /root/cdrom
     mount -o bind /root/cdrom /root/boot
-    chroot /root grub-install ${BOOTDEV}${RP_PART_NUM}
+    chroot /root grub-install --force ${BOOTDEV}${RP_PART_NUM}
 
     # Cleanup
     umount /root/boot

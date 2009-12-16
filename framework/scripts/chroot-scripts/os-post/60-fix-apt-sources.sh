@@ -29,7 +29,3 @@ IFHALT "Fixing apt sources..."
 # comment out cdrom lines
 perl -p -i -e 's/^(deb cdrom)/## \1/;' /etc/apt/sources.list
 
-CODENAME=`lsb_release -c -s`
-
-echo "deb http://ppa.launchpad.net/dell-team/ppa/ubuntu $CODENAME main" >> /etc/apt/sources.list
-echo "deb-src http://ppa.launchpad.net/dell-team/ppa/ubuntu $CODENAME main" >> /etc/apt/sources.list

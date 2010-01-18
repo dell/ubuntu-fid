@@ -1,6 +1,7 @@
 .disk
 casper
 dists
+install/sources.list
 isolinux
 pool/main/d/dkms
 pool/main/f/

@@ -4,7 +4,6 @@ dists
 install/sources.list
 isolinux
 pool/main/d/dkms
-pool/main/d/dpkg
 pool/main/f/
 pool/main/l/linux/
 pool/main/l/lzo2/

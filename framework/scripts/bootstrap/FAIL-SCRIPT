@@ -29,28 +29,15 @@ echo "FATAL ERROR IN INSTALLATION... ABORTING." > /dev/tty1
 # this script not meant to be replaced by FI team
 
 #tell the user to reboot
-if splash_running; then
-    splash_start_indefinite
-    /sbin/usplash_write "CLEAR"
-    /sbin/usplash_write "CLEAR"
-    /sbin/usplash_write "TEXT-URGENT FAILURE During bootstrap process."
-    /sbin/usplash_write "TEXT-URGENT a debug shell has been spawned to debug."
-else
-    chvt 5
-    echo -e "\n\n" > /dev/console
-    echo -e "\n\n" > /dev/console
-    echo -e "\n\n" > /dev/console
-    echo -e "\n\n" > /dev/console
-    echo -e "\n\n" > /dev/console
-    echo -e ""
-    echo -e ""FAILURE During bootstrap process."" > /dev/console
-    echo -e ""a debug shell has been spawned to debug."" > /dev/console
-    read x < /dev/console
+try_splash_quit \
+    "FAILURE during bootstrap process.
+    \nA debug shell has been spawned to debug with on /dev/tty12."
+
+if ! grep -q DEBUG /proc/cmdline; then
+    while true; do
+        chvt 12
+        /bin/sh > /dev/tt12 < /dev/tty12 2>&1
+    done
 fi
-
-
-while true; do
-    /bin/sh > /dev/console < /dev/console 2>&1
-done
 
 

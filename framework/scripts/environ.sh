@@ -25,13 +25,6 @@
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
 
-#Load splash screen support
-if [ -f /lib/init/splash-functions-base ]; then
-    . /lib/init/splash-functions-base
-else
-    . $ROOT/scripts/splash-functions
-fi
-
 export TARGET=/target
 
 export ORIGPATH=$PATH

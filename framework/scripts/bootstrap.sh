@@ -25,10 +25,11 @@
 #       MA 02110-1301, USA.
 # vim:ts=8:sw=8:et:tw=0
 
-set -x
+if grep -q DEBUG /proc/cmdline; then
+    set -x
+    /bin/sh >/dev/tty12 </dev/tty12 &
+fi
 set -e
-
-echo "in bootstrap.sh" > /dev/tty12
 
 ROOT="/root/cdrom"
 if [ ! -d "$ROOT" ]; then
@@ -36,9 +37,8 @@ if [ ! -d "$ROOT" ]; then
 fi
 export ROOT
 
-exec > /dev/tty1 2>&1
-
-echo "in $0"
+#Load splash screen support
+. $ROOT/scripts/splash.sh
 
 # Execute FAIL-SCRIPT if we exit for any reason (abnormally)
 trap ". $ROOT/scripts/bootstrap/FAIL-SCRIPT" TERM INT HUP EXIT QUIT
@@ -47,8 +47,6 @@ trap ". $ROOT/scripts/bootstrap/FAIL-SCRIPT" TERM INT HUP EXIT QUIT
 
 for i in $ROOT/scripts/bootstrap/*.sh;
 do
-    echo "running bootstrap script: $i"  > /dev/tty12
-    echo -n -e "\n\nrunning bootstrap script: $i\n"
     [ -e $i ] && . $i
 done
 

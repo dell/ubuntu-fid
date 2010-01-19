@@ -109,23 +109,7 @@ EOF
     eject -p -m /cdrom >/dev/null 2>&1 || true
 
     #tell the user to reboot
-    if splash_running; then
-        splash_start_indefinite
-        /sbin/usplash_write "VERBOSE on"
-        /sbin/usplash_write "CLEAR"
-        /sbin/usplash_write "PROGRESS 100"
-        /sbin/usplash_write "INPUTENTER Please remove this recovery media and press enter to reboot."
-        answer=$(cat /dev/.initramfs/usplash_outfifo)
-    else
-        chvt 5
-        echo -e "\n\n" > /dev/console
-        echo -e "\n\n" > /dev/console
-        echo -e "\n\n" > /dev/console
-        echo -e "\n\n" > /dev/console
-        echo -e "\n\n" > /dev/console
-        echo -e ""
-        echo -e ""Please remove this recovery media and press enter to reboot"" > /dev/console
-        read x < /dev/console
-    fi
+    ANSWER=$(try_splash_ask \
+    "Please remove this recovery media and press enter to reboot.")
     reboot -n
 fi

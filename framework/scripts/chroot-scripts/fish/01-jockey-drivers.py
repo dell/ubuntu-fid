@@ -31,31 +31,10 @@ import os
 import apt
 import sys
 import tempfile
-from apt.progress import InstallProgress
 import apt.cdrom
 import atexit
 import aptsources.sourceslist
 import shutil
-
-class TextInstallProgress(InstallProgress):
-    
-    def __init__(self):
-        apt.progress.InstallProgress.__init__(self)
-        self.last = 0.0
-
-    def updateInterface(self):
-        InstallProgress.updateInterface(self)
-        if self.last >= self.percent:
-            return
-        sys.stdout.write("\r[%s] %s\n" %(self.percent, self.status))
-        sys.stdout.flush()
-        self.last = self.percent
-
-    def conffile(self, current, new):
-        print "conffile prompt: %s %s" % (current, new)
-    
-    def error(self, errorstr):
-        print "got dpkg error: '%s'" % errorstr
 
 class ProcessJockey():
 
@@ -89,30 +68,13 @@ class ProcessJockey():
         '''Prepares the temp pool for new drivers
            directory: a two level directory (eg /a/b)
            drivers: a list of drivers that need updating'''
-        #1st: install dpkg-dev (it's in the cdrom pool already)
-        cache = apt.Cache(apt.progress.OpTextProgress())
-        apt.apt_pkg.Config.Set('APT::Install-Recommends','0')
-
-        fprogress = apt.progress.TextFetchProgress()
-        iprogress = TextInstallProgress()
-
-        pkg = cache["dpkg-dev"]
-        if not pkg.isInstalled:
-            print "Installing %s" % pkg.name
-            pkg.markInstall()
-            res = cache.commit(fprogress, iprogress)
-            print res
-        else:
-            print "dpkg-dev already installed"
-        del cache
-
         #make a nice set of symlinks
         for driver in drivers:
             for file in os.listdir(os.path.join(self.driver_root,driver)):
                 os.symlink(os.path.join(self.driver_root,driver,file),os.path.join(directory,file))
 
         #build the packages file
-        ret = subprocess.Popen(['dpkg-scanpackages', os.path.split(directory)[1], '/dev/null'], cwd=os.path.split(directory)[0], stdout=subprocess.PIPE)
+        ret = subprocess.Popen(['apt-ftparchive', 'packages', os.path.split(directory)[1]], cwd=os.path.split(directory)[0], stdout=subprocess.PIPE)
         output = ret.communicate()[0]
         code = ret.wait()
         if (code != 0):

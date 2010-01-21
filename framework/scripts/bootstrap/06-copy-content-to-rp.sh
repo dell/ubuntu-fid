@@ -98,7 +98,7 @@ EOF
     #create a new UUID for the partition we
     #are dropping down to allow the user to
     #use this cd still to recover the system
-    chroot /root casper-new-uuid /cdrom/casper/initrd.lz /boot/casper /boot/.disk
+    chroot /root casper-new-uuid /cdrom/casper/initrd.lz /boot/casper /boot/.disk || ( cp $ROOT/casper/initrd.lz $ROOT/../boot/casper && cp $ROOT/.disk/info $ROOT/../boot/.disk )
 
     #If we're gonna support kexec, might as well try here
     CMDLINE=$(cat /proc/cmdline | sed "s/DVDBOOT\|REINSTALL//g")

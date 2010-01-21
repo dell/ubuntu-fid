@@ -34,7 +34,7 @@ try_splash_quit \
     \nA debug shell has been spawned to debug with on /dev/tty12.
     \nYou can switch to it by pressing ctrl-alt-f12."
 
-if ! grep -q DEBUG /proc/cmdline; then
+if ! grep -q -v quiet /proc/cmdline; then
     while true; do
         /bin/sh 2>/dev/tty12 1>/dev/tty12 </dev/tty12
     done

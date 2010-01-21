@@ -25,7 +25,7 @@
 #       MA 02110-1301, USA.
 # vim:ts=8:sw=8:et:tw=0
 
-if grep -q DEBUG /proc/cmdline; then
+if grep -q -v quiet /proc/cmdline; then
     set -x
     /bin/sh 2>/dev/tty12 1>/dev/tty12 </dev/tty12 &
 fi

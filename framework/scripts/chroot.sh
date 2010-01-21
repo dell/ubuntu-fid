@@ -92,7 +92,11 @@ if ! mount | grep "$TARGET/media/cdrom"; then
 fi
 
 # re-enable the cdrom for postinstall
-sed -i 's/^#deb\ cdrom/deb\ cdrom/' $TARGET/etc/apt/sources.list
+if grep -q -v "^#deb\ cdrom" $TARGET/etc/apt/sources.list
+    sed -i 's/^#deb\ cdrom/deb\ cdrom/' $TARGET/etc/apt/sources.list
+else
+    apt-cdrom -m -f add
+fi
 
 chroot $TARGET /cdrom/scripts/chroot-scripts/run_chroot
 

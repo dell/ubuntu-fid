@@ -41,7 +41,9 @@ if [ -x /usr/bin/udpkg ]; then
 fi
 export LOG
 
-exec > $TARGET/$LOG/chroot.sh.log 2>&1
+if [ -d "$TARGET/$LOG" ]; then
+    exec > $TARGET/$LOG/chroot.sh.log 2>&1
+fi
 chroot $TARGET chattr +a $LOG/chroot.sh.log
 
 echo "in $0"

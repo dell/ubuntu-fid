@@ -100,6 +100,11 @@ EOF
     #use this cd still to recover the system
     chroot /root casper-new-uuid /cdrom/casper/initrd.lz /boot/casper /boot/.disk
 
+    #If we're gonna support kexec, might as well try here
+    CMDLINE=$(cat /proc/cmdline | sed "s/DVDBOOT\|REINSTALL//g")
+    cp $ROOT/misc/kexec /tmp
+    /tmp/kexec -l $ROOT/../boot/casper/vmlinuz --initrd=$ROOT/../boot/casper/initrd.lz --command-line="$CMDLINE" || true
+
     #clean up
     umount /root/dev
     umount /root/boot
@@ -108,8 +113,8 @@ EOF
     #eject the disk
     eject -p -m /cdrom >/dev/null 2>&1 || true
 
-    #tell the user to reboot
+    #tell the user to remove media
     ANSWER=$(try_splash_ask \
-    "Please remove this recovery media and press enter to reboot.")
-    reboot -n
+    "Please remove this recovery media and press enter to continue (your system may reboot)")
+    /tmp/kexec -e || reboot -n
 fi

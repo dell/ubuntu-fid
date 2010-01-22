@@ -3,6 +3,7 @@ casper
 dists
 install/sources.list
 isolinux
+pool/main/b/bcmwl
 pool/main/d/dkms
 pool/main/f/
 pool/main/l/linux/

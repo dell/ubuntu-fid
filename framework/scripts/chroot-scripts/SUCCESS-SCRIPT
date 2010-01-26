@@ -63,7 +63,7 @@ fi
 
 IFHALT "Clean up FID FAIL & SUCCESS scripts..."
 rm -rf /cdrom/scripts/chroot-scripts/FAIL-SCRIPT
-echo -e "#!/bin/sh\n# Fail code goes here..." > /cdrom/scripts/chroot-scripts/FAIL-SCRIPT
+echo "#!/bin/sh\n# Fail code goes here..." > /cdrom/scripts/chroot-scripts/FAIL-SCRIPT
 rm -rf /cdrom/scripts/chroot-scripts/SUCCESS-SCRIPT
 cat > /cdrom/scripts/chroot-scripts/SUCCESS-SCRIPT << EOF
 . /cdrom/scripts/chroot-scripts/fifuncs "target"

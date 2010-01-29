@@ -153,6 +153,9 @@
  # Don't show incomplete language support message
   d-i pkgsel/ignore-incomplete-language-support boolean true
 
+ # For OEM-Config, only show the languages that are installable
+  d-i ubiquity/only-show-installable-languages boolean true
+
  # if we are using a CD, then only activate this one:
   #d-i pkgsel/language-packs string en
 

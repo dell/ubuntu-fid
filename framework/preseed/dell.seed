@@ -134,6 +134,7 @@
  # enable oem mode
   d-i oem-config/enable boolean true
   d-i oem-config/id string Dell Inc.
+  d-i oem-config/remove boolean true
 
 ### Package selection
 

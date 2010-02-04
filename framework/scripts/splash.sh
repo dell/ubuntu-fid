@@ -45,7 +45,10 @@ try_splash_ask()
 {
     INPUT="$(printf "$1")"
     if splash_running; then
-        ANSWER=$(plymouth ask-question --prompt="$INPUT")
+        #We REALLY want to be asking a question, but can't until this bug is fixed:
+        #https://bugs.launchpad.net/ubuntu/+source/plymouth/+bug/509384
+        #ANSWER=$(plymouth ask-question --prompt="$INPUT")
+        ANSWER=$(plymouth ask-for-password --prompt="$INPUT")
     else
         chvt 5
         printf "$INPUT" > /dev/console

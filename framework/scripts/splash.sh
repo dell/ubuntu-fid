@@ -32,7 +32,7 @@ fi
 
 try_splash_write()
 {
-    INPUT=$(echo $1)
+    INPUT="$(printf "$1")"
     if splash_running; then
         plymouth message --text="$INPUT"
     else
@@ -43,7 +43,7 @@ try_splash_write()
 
 try_splash_ask()
 {
-    INPUT=$(echo $1)
+    INPUT="$(printf "$1")"
     if splash_running; then
         ANSWER=$(plymouth ask-question --prompt="$INPUT")
     else
@@ -56,7 +56,7 @@ try_splash_ask()
 
 try_splash_quit()
 {
-    INPUT=$(echo $1)
+    INPUT="$(printf "$1")"
     if splash_running; then
         plymouth message --text="$INPUT"
         plymouth quit --retain-splash

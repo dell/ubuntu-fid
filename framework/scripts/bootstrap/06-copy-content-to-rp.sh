@@ -114,6 +114,10 @@ EOF
     eject -p -m /cdrom >/dev/null 2>&1 || true
 
     #tell the user to remove media
+    try_splash_write \
+"There is an error with the below message.
+Remove your media and press enter.  For more information, see
+https://bugs.launchpad.net/ubuntu/+source/plymouth/+bug/515822"
     ANSWER=$(try_splash_ask "Please remove this recovery media and press enter to continue (your system may reboot)")
     /tmp/kexec -e || reboot -n
 fi

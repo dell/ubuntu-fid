@@ -32,30 +32,34 @@ if grep -q DVDBOOT /proc/cmdline || ( grep -q REINSTALL /proc/cmdline && [ -e $B
     CORRECT_ANSWER="ERASE"
 
     ANSWER=$(try_splash_ask \
-    ">>WARNING<<
-    \nThis operation will restore your system to the original factory configuration.
-    \nAll personal files and changes will be lost.
-    \nTo proceed, please type: $CORRECT_ANSWER")
+">>WARNING<<
+This operation will restore your system to the original factory configuration.
+All personal files and changes will be lost.
+To proceed, please type: $CORRECT_ANSWER")
 
     if [ "$ANSWER" = "$CORRECT_ANSWER" ]; then
         try_splash_write \
-        "Continuing installation.  Hard drive erasure will begin in 10 seconds.
-        \nPower off system to abort.
-        \n(last chance)"
+"Continuing installation.  Hard drive erasure will begin in 10 seconds.
+Power off system to abort.
+(last chance)"
+
         sleep 10
+
         try_splash_write \
-        "Installation in progress.
-        \n
-        \nPlease be patient, as this process will take between 15-60 minutes.
-        \nIf your system loses power, the install will restart from the beginning."
+"Installation in progress.
+
+Please be patient, as this process will take between 15-60 minutes.
+If your system loses power, the install will restart from the beginning."
+
         return
     fi
 
     try_splash_write \
-    "Installation ABORTED.
-    \nSystem will reboot in 30 seconds.
-    \n
-    \nNO CHANGES HAVE BEEN MADE TO YOUR HARD DRIVE."
+"Installation ABORTED.
+System will reboot in 30 seconds.
+
+NO CHANGES HAVE BEEN MADE TO YOUR HARD DRIVE."
+
     sleep 30
     while true; do reboot -fn; done
 fi

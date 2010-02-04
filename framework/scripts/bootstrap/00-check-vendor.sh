@@ -26,8 +26,8 @@
 if ! chroot /root dmidecode | grep -i "Vendor: Dell" 2>&1 >/dev/null &&
    ! chroot /root dmidecode | grep -i "Vendor: innotek" 2>&1 >/dev/null; then
     try_splash_write \
-    "This disk is only valid for Dell systems.
-    \nRebooting system in 30 seconds."
+"This disk is only valid for Dell systems.
+Rebooting system in 30 seconds."
     sleep 30
     while true; do reboot -fn; done
 fi

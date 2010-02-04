@@ -30,9 +30,9 @@ echo "FATAL ERROR IN INSTALLATION... ABORTING." > /dev/tty1
 
 #tell the user to reboot
 try_splash_quit \
-    "FAILURE during bootstrap process.
-    \nA debug shell has been spawned to debug with on /dev/tty12.
-    \nYou can switch to it by pressing ctrl-alt-f12."
+"FAILURE during bootstrap process.
+A debug shell has been spawned to debug with on /dev/tty12.
+You can switch to it by pressing ctrl-alt-f12."
 
 if ! grep -q -v quiet /proc/cmdline; then
     while true; do

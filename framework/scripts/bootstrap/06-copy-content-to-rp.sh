@@ -114,7 +114,6 @@ EOF
     eject -p -m /cdrom >/dev/null 2>&1 || true
 
     #tell the user to remove media
-    ANSWER=$(try_splash_ask \
-    "Please remove this recovery media and press enter to continue (your system may reboot)")
+    ANSWER=$(try_splash_ask "Please remove this recovery media and press enter to continue (your system may reboot)")
     /tmp/kexec -e || reboot -n
 fi

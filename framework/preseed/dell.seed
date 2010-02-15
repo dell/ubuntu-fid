@@ -117,7 +117,7 @@
   d-i grub-installer/with_other_os boolean false
 
  # Install grub2 to the proper install-to partition.
-  d-i grub-installer/bootdev  string (hd0,3)
+  d-i grub-installer/bootdev  string /dev/sda3
 
  # Don't let Ubiquity make our install-to partition active.  We'll do that
  # Ourselves later after the install is all done.

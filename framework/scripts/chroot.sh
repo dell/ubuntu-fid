@@ -91,13 +91,10 @@ if ! mount | grep "$TARGET/media/cdrom"; then
     MOUNT_CLEANUP="$TARGET/cdrom $MOUNT_CLEANUP"
 fi
 
-# re-enable the cdrom for postinstall
-if grep -q -v "^#deb\ cdrom" $TARGET/etc/apt/sources.list; then
-    sed -i 's/^#deb\ cdrom/deb\ cdrom/' $TARGET/etc/apt/sources.list
-else
-    apt-cdrom -m -f add
-fi
+# enable our pool for post install
+chroot $TARGET /cdrom/scripts/pool.sh
 
+#Run chroot scripts
 chroot $TARGET /cdrom/scripts/chroot-scripts/run_chroot
 
 for mountpoint in $MOUNT_CLEANUP;

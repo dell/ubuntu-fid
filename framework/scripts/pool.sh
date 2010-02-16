@@ -1,11 +1,12 @@
 #!/bin/sh
 #
-#       <60-fix-apt-source.sh>
+#       <buildpool.sh>
 #
-#       Copyright 2008 Dell Inc.
+#       Builds a pool from important stuff in /cdrom
+#       * Expects to be called as root w/ /cdrom referring to our stuff
+#
+#       Copyright 2010 Dell Inc.
 #           Mario Limonciello <Mario_Limonciello@Dell.com>
-#           Hatim Amro <Hatim_Amro@Dell.com>
-#           Michael E Brown <Michael_E_Brown@Dell.com>
 #
 #       This program is free software; you can redistribute it and/or modify
 #       it under the terms of the GNU General Public License as published by
@@ -21,11 +22,26 @@
 #       along with this program; if not, write to the Free Software
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
+# vim:ts=8:sw=8:et:tw=0
 
-. /cdrom/scripts/chroot-scripts/fifuncs ""
+if [ -n "$1" ] && [ "$1" = "reverse" ]; then
+    rm -f /etc/apt/apt.conf.d/00AllowUnauthenticated
+    if [ -e /etc/apt/sources.list.ubuntu ]; then
+        mv /etc/apt/sources.list.ubuntu /etc/apt/sources.list
+    fi
+    exit 0
+fi
+cd /cdrom
 
-IFHALT "Fixing apt sources..."
+apt-ftparchive packages ../cdrom | sed "s/^Filename:\ ..\//Filename:\ .\//" > /Packages
 
-# comment out cdrom lines
-perl -p -i -e 's/^(deb cdrom)/## \1/;' /etc/apt/sources.list
+mv /etc/apt/sources.list /etc/apt/sources.list.ubuntu
+echo "deb file:/ /" > /etc/apt/sources.list
 
+cat > /etc/apt/apt.conf.d/00AllowUnauthenticated << EOF
+APT::Get::AllowUnauthenticated "true";
+Aptitude::CmdLine::Ignore-Trust-Violations "true";
+EOF
+
+apt-get update
+rm -f /Packages

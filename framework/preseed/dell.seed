@@ -135,6 +135,8 @@
   d-i oem-config/enable boolean true
   d-i oem-config/id string Dell Inc.
   d-i oem-config/remove boolean true
+  d-i oem-config/early_command string mount /dev/sda2 /cdrom
+  d-i oem-config/late_command string /cdrom/scripts/pool.sh reverse
 
 ### Package selection
 

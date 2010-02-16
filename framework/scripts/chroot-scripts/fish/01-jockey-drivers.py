@@ -64,51 +64,6 @@ class ProcessJockey():
                         print "Failed to install modaliases package: " + item 
                         exit(code)
 
-    def prepare_pool(self, directory, drivers):
-        '''Prepares the temp pool for new drivers
-           directory: a two level directory (eg /a/b)
-           drivers: a list of drivers that need updating'''
-        #make a nice set of symlinks
-        for driver in drivers:
-            for file in os.listdir(os.path.join(self.driver_root,driver)):
-                os.symlink(os.path.join(self.driver_root,driver,file),os.path.join(directory,file))
-
-        #build the packages file
-        ret = subprocess.Popen(['apt-ftparchive', 'packages', os.path.split(directory)[1]], cwd=os.path.split(directory)[0], stdout=subprocess.PIPE)
-        output = ret.communicate()[0]
-        code = ret.wait()
-        if (code != 0):
-            print "failed to write updated package lists for injected drivers"
-            exit(code)
-        if os.path.exists(os.path.join(directory, 'Packages')):
-            os.remove(os.path.join(directory, 'Packages'))
-        file = open(os.path.join(directory, 'Packages'),'w')
-        file.write(output)
-        file.close()
-
-    def toggle_sources_list(self,enable,directory=None):
-        '''Toggles if an apt source is enabled'''
-        #add to sources.list
-        
-        if enable:
-            if directory:
-                #move old sources.list out of the way
-                shutil.move('/etc/apt/sources.list','/etc/apt/sources.list.jockey')
-                #create a new sources.list
-                open('/etc/apt/sources.list','w').close()
-                sources = aptsources.sourceslist.SourcesList()
-                sources.add('deb','file:' + os.path.split(directory)[0], os.path.split(directory)[1] + '/', [])
-                sources.save()
-                cdrom = apt.cdrom.Cdrom()
-                cdrom.add()
-                #update apt cache with local sources only
-                cache = apt.Cache()
-                print cache.update(apt.progress.TextFetchProgress())
-            else:
-                print "Error, must provide a directory to enable"
-        elif os.path.exists('/etc/apt/sources.list.jockey'):
-            shutil.move('/etc/apt/sources.list.jockey','/etc/apt/sources.list')
-
     def find_and_install_drivers(self):
         '''Uses jockey to detect and install necessary drivers'''
 
@@ -166,7 +121,4 @@ if __name__ == "__main__":
     if len(drivers) > 0:
         tmp_dir = tempfile.mkdtemp()
         processor.install_new_aliases(drivers)
-        processor.prepare_pool(tmp_dir, drivers)
-        processor.toggle_sources_list(True, tmp_dir)
-        atexit.register(processor.toggle_sources_list,False)
     processor.find_and_install_drivers()

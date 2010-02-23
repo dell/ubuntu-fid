@@ -29,7 +29,13 @@
 set -x
 set -e
 
-. /cdrom/scripts/environ.sh
+export BOOT_PART_NUM=3
+export TARGET=/target
+
+DEVICE=$(mount | sed -n 's/\ on\ \/cdrom.*//p')
+export BOOTDEV=${DEVICE%%[0-9]*}
+DEVICE=$(mount | sed -n 's/\ on\ \/target.*//p')
+export TARGETDEV=${DEVICE%%[0-9]*}
 
 LOG="var/log"
 DPKG=dpkg
@@ -90,9 +96,6 @@ if ! mount | grep "$TARGET/media/cdrom"; then
     mount --bind /cdrom $TARGET/cdrom
     MOUNT_CLEANUP="$TARGET/cdrom $MOUNT_CLEANUP"
 fi
-
-# enable our pool for post install
-chroot $TARGET /cdrom/scripts/pool.sh
 
 #Run chroot scripts
 chroot $TARGET /cdrom/scripts/chroot-scripts/run_chroot

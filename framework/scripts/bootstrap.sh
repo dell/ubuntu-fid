@@ -2,9 +2,9 @@
 #
 #       <bootstrap.sh>
 #
-#       Launches all preinstall (bootstrap) scripts before starting installation
+#       Loads the ubiquity dell bootstrap plugin into place
 #
-#       Copyright 2008 Dell Inc.
+#       Copyright 2008-2010 Dell Inc.
 #           Mario Limonciello <Mario_Limonciello@Dell.com>
 #           Hatim Amro <Hatim_Amro@Dell.com>
 #           Michael E Brown <Michael_E_Brown@Dell.com>
@@ -25,32 +25,9 @@
 #       MA 02110-1301, USA.
 # vim:ts=8:sw=8:et:tw=0
 
-if grep -q -v quiet /proc/cmdline; then
-    set -x
-    /bin/sh 2>/dev/tty12 1>/dev/tty12 </dev/tty12 &
-fi
-set -e
+#Build pool (so we know which version we need)
+chroot /root /cdrom/scripts/pool.sh
 
-ROOT="/root/cdrom"
-if [ ! -d "$ROOT" ]; then
-    ROOT="/cdrom"
-fi
-export ROOT
+#casper 1.218 or newer
+chroot /root apt-get install dell-recovery -y
 
-#Load splash screen support
-. $ROOT/scripts/splash.sh
-
-# Execute FAIL-SCRIPT if we exit for any reason (abnormally)
-trap ". $ROOT/scripts/bootstrap/FAIL-SCRIPT" TERM INT HUP EXIT QUIT
-
-. $ROOT/scripts/environ.sh
-
-for i in $ROOT/scripts/bootstrap/*.sh;
-do
-    [ -e $i ] && . $i
-done
-
-# reset traps, as we are now exiting normally
-trap - TERM INT HUP EXIT QUIT
-
-. $ROOT/scripts/bootstrap/SUCCESS-SCRIPT

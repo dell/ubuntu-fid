@@ -28,7 +28,7 @@
 
 . /cdrom/scripts/chroot-scripts/fifuncs ""
 
-if [ "$BOOTDEV" != "$TARGETDEV" ]; then
+if [ "$BOOTDEV" = "$TARGETDEV" ]; then
     IFHALT "Activate bootable partition..."
 
     #Sets the active partition to the newly installed partition

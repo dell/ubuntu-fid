@@ -54,6 +54,12 @@ chroot $TARGET chattr +a $LOG/chroot.sh.log
 
 echo "in $0"
 
+# Nobulate Here.
+# This way if we die early we'll RED Screen
+if [ -x /dell/fist/tal ]; then
+    /dell/fist/tal nobulate 0
+fi
+
 if [ "$1" != "success" ]; then
     . /cdrom/scripts/chroot-scripts/FAIL-SCRIPT
     exit 1
@@ -61,21 +67,6 @@ fi
 
 # Execute FAIL-SCRIPT if we exit for any reason (abnormally)
 trap ". /cdrom/scripts/chroot-scripts/FAIL-SCRIPT" TERM INT HUP EXIT QUIT
-
-
-# Install FIST and Nobulate Here.
-# This way if we die early we'll RED Screen
-if ls /cdrom/debs/fist/*.deb > /dev/null 2>&1; then
-    if mount | grep "/root"; then
-        umount /root
-    fi
-    if mount | grep "/mnt"; then
-        umount /mnt
-    fi
-    $DPKG -i /cdrom/debs/fist/*.deb
-    sync;sync
-    [ -f /dell/fist/tal ] && /dell/fist/tal nobulate 0
-fi
 
 mount --bind /dev $TARGET/dev
 MOUNT_CLEANUP="$TARGET/dev $MOUNT_CLEANUP"

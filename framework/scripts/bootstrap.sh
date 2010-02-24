@@ -28,6 +28,12 @@
 #Build pool (so we know which version we need)
 chroot /root /cdrom/scripts/pool.sh
 
-#casper 1.218 or newer
+#shows our bootstrap page
 chroot /root apt-get install dell-recovery -y
+
+#only if we are in factory or bto-a
+if chroot /root apt-cache show fist 2>/dev/null 1>/dev/null; then
+    chroot /root apt-get install fist -y
+fi
+
 

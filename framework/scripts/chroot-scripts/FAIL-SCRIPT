@@ -34,13 +34,18 @@ set -e
 
 IFHALT "(FAIL) Clean-Up & Report FI logs ..."
 
-rm -rf /etc/mtab
-ln -s /proc/mounts /etc/mtab
 mount -o remount,rw /cdrom
 
-IFHALT "Reporting logs to DMP"
-cp -f $TARGET/$LOG/chroot.sh.log /tmp/fist.err
-[ -f /dell/fist/tal ] && /dell/fist/tal PutFiles /tmp/fist.err
-sync
+if [ -x /dell/fist/tal ]; then
+    IFHALT "Reporting logs to DMP"
+    cp -f $TARGET/$LOG/chroot.sh.log /tmp/fist.err
+    /dell/fist/tal PutFiles /tmp/fist.err
+    sync
+else
+    IFHALT "Reporting failure to grubenv"
+    [ -s /cdrom/grub/grubenv ] || rm -f /cdrom/grub/grubenv
+    mkdir -p /cdrom/grub
+    grub-editenv /cdrom/grub/grubenv set recordfail=1
+fi
 
 IFHALT "(FAIL) Report to FI logs.. Done!"

@@ -32,51 +32,67 @@
 set -x
 set -e
 
-IFHALT "(SUCCESS) Clean-Up and Report FI logs ..." > /dev/tty12
+if [ "$BOOTDEV" = "$TARGETDEV" ]; then
+    mount -o remount,rw /cdrom
 
-rm -rf /etc/mtab
-ln -s /proc/mounts /etc/mtab
-mount -o remount,rw /cdrom
-
-IFHALT "Clean up FI Env..."
-rm -rf /cdrom/scripts/chroot-scripts/os-post/95-set_UTC_TZ.sh
-rm -rf /cdrom/misc/run-tz-fix
-rm -rf /cdrom/misc/tz_offset.py
-rm -rf /cdrom/command.com
-rm -rf /cdrom/autoexec.bat
-rm -rf /cdrom/dellbio.bin
-rm -rf /cdrom/dellrmk.bin
-rm -rf /cdrom/linld.com
-rm -rf /cdrom/cmd.cfg
-
-IFHALT "Remove Bad line in /etc/fstab"
-sed -i '/\/dev\/sda2/d' $TARGET/etc/fstab
-
-IFHALT "Report the LOG... If applicable"
-chroot $TARGET chattr -a $LOG/chroot.sh.log
-mv -f $TARGET/$LOG/chroot.sh.log /tmp/fist.log
-if [ -f /dell/fist/tal ]; then
-	/dell/fist/tal PutFiles /tmp/fist.log
-	rm -rf /dell
-	rm -rf /cdrom/debs/fist
-fi
-
-IFHALT "Clean up FID FAIL & SUCCESS scripts..."
-rm -rf /cdrom/scripts/chroot-scripts/FAIL-SCRIPT
-echo "#!/bin/sh\n# Fail code goes here..." > /cdrom/scripts/chroot-scripts/FAIL-SCRIPT
-rm -rf /cdrom/scripts/chroot-scripts/SUCCESS-SCRIPT
-cat > /cdrom/scripts/chroot-scripts/SUCCESS-SCRIPT << EOF
+    IFHALT "Clean up FID FAIL & SUCCESS scripts..."
+    rm -rf /cdrom/scripts/chroot-scripts/FAIL-SCRIPT
+    cat > /cdrom/scripts/chroot-scripts/FAIL-SCRIPT << EOF
 . /cdrom/scripts/chroot-scripts/fifuncs "target"
 set -x
 
-IFHALT "Resetting grub fail state"
-[ -s /cdrom/grub/grubenv ] || rm -f /cdrom/grub/grubenv
-mkdir -p /cdrom/grub
-grub-editenv /cdrom/grub/grubenv unset recordfail
+IFHALT "(FAIL) Clean-Up & Report FI logs ..."
+
+if [ "\$BOOTDEV" = "\$TARGETDEV" ]; then
+    mount -o remount,rw /cdrom
+    
+    IFHALT "Resetting grub fail state"
+    [ -s /cdrom/grub/grubenv ] || rm -f /cdrom/grub/grubenv
+    mkdir -p /cdrom/grub
+    grub-editenv /cdrom/grub/grubenv set recordfail=1
+fi
 EOF
+    
+    rm -rf /cdrom/scripts/chroot-scripts/SUCCESS-SCRIPT
+    cat > /cdrom/scripts/chroot-scripts/SUCCESS-SCRIPT << EOF
+. /cdrom/scripts/chroot-scripts/fifuncs "target"
+set -x
 
-#We don't need to set this executable because on FAT32
-#everything is already executable
-/cdrom/scripts/chroot-scripts/SUCCESS-SCRIPT
+IFHALT "(SUCCESS) Clean-Up and Report FI logs ..."
 
-IFHALT "SUCCESS-SCRIPT is Done!"
+chroot $TARGET chattr -a $LOG/chroot.sh.log
+
+if [ "\$BOOTDEV" = "\$TARGETDEV" ]; then
+    mount -o remount,rw /cdrom
+
+    IFHALT "Resetting grub fail state"
+    [ -s /cdrom/grub/grubenv ] || rm -f /cdrom/grub/grubenv
+    mkdir -p /cdrom/grub
+    grub-editenv /cdrom/grub/grubenv unset recordfail
+fi
+EOF
+    
+    #We don't need to set this executable because on FAT32
+    #everything is already executable
+    /cdrom/scripts/chroot-scripts/SUCCESS-SCRIPT
+    
+    IFHALT "Clean up FI Env..."
+    rm -rf /cdrom/scripts/chroot-scripts/os-post/95-set_UTC_TZ.sh
+    rm -rf /cdrom/misc/run-tz-fix
+    rm -rf /cdrom/misc/tz_offset.py
+    rm -rf /cdrom/command.com
+    rm -rf /cdrom/autoexec.bat
+    rm -rf /cdrom/dellbio.bin
+    rm -rf /cdrom/dellrmk.bin
+    rm -rf /cdrom/linld.com
+    rm -rf /cdrom/cmd.cfg
+
+    IFHALT "Report the LOG... If applicable"
+    if [ -f /dell/fist/tal ]; then
+        cp $TARGET/$LOG/chroot.sh.log /tmp/fist.log
+        /dell/fist/tal PutFiles /tmp/fist.log
+        rm -rf /cdrom/debs/fist
+    fi
+fi
+
+IFHALT "(SUCCESS) Report to logs.. Done!"

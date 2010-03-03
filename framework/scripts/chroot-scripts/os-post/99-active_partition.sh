@@ -34,4 +34,9 @@ if [ "$BOOTDEV" = "$TARGETDEV" ]; then
     #Sets the active partition to the newly installed partition
     #as a last step, in the event of a possible power outage
     sfdisk -A$BOOT_PART_NUM $BOOTDEV
+else
+    IFHALT "Reverse CDROM Pool due to lack of RP on target"
+    #If the bootdev and targetdev aren't the same but we made
+    #it this far, then this must be a system w/o an RP.
+    /cdrom/scripts/pool.sh reverse
 fi

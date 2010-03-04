@@ -38,5 +38,5 @@ else
     IFHALT "Reverse CDROM Pool due to lack of RP on target"
     #If the bootdev and targetdev aren't the same but we made
     #it this far, then this must be a system w/o an RP.
-    /cdrom/scripts/pool.sh reverse
+    rm -f /etc/apt/sources.list.d/dell.list
 fi

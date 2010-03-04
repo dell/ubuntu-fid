@@ -24,19 +24,12 @@
 #       MA 02110-1301, USA.
 # vim:ts=8:sw=8:et:tw=0
 
-if [ -n "$1" ] && [ "$1" = "reverse" ]; then
-    rm -f /etc/apt/apt.conf.d/00AllowUnauthenticated
-    if [ -e /etc/apt/sources.list.ubuntu ]; then
-        mv /etc/apt/sources.list.ubuntu /etc/apt/sources.list
-    fi
-    exit 0
-fi
 cd /cdrom
 
 apt-ftparchive packages ../cdrom | sed "s/^Filename:\ ..\//Filename:\ .\//" > /Packages
 
 mv /etc/apt/sources.list /etc/apt/sources.list.ubuntu
-echo "deb file:/ /" > /etc/apt/sources.list
+echo "deb file:/ /" > /etc/apt/sources.list.d/dell.list
 
 cat > /etc/apt/apt.conf.d/00AllowUnauthenticated << EOF
 APT::Get::AllowUnauthenticated "true";
@@ -44,4 +37,5 @@ Aptitude::CmdLine::Ignore-Trust-Violations "true";
 EOF
 
 apt-get update
+mv /etc/apt/sources.list.ubuntu /etc/apt/sources.list
 rm -f /Packages

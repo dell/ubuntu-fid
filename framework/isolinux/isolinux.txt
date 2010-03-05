@@ -1,7 +1,7 @@
 
 This is the Ubuntu Live Dell Reinstallation Media.
 
-For the default Vendor Reinstallation system, press ENTER.
+For the default reinstallation system, press ENTER.
 
 For boot into Live image, type 'live' and then press ENTER.
 

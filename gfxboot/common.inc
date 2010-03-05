@@ -987,7 +987,7 @@
   font.normal setfont
 
   /menu.text.normal    lightblue         def
-  /menu.text.select    white             def
+  /menu.text.select    red               def
   /boot.text.options   white             def
   /boot.text.normal    white             def
   /infobox.bg          lightgray         def

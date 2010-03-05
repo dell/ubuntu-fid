@@ -428,7 +428,7 @@
   } if
 
   timeout.hidden {
-    "maybe-ubiquity " bc.cmd dup length add sprintf
+    "dell-recovery/recovery_type=dvd automatic-ubiquity noprompt edd=on " bc.cmd dup length add sprintf
   } if
 
   bc.cmd dropspaces

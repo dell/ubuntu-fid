@@ -44,3 +44,34 @@ IFHALT() {
     fi
 }
 
+match_system_device()
+{
+    if [ "$1" = "usb" ]; then
+        VENDOR_FILE="idVendor"
+        DEVICE_FILE="idProduct"
+    elif [ "$1" = "pci" ]; then
+        VENDOR_FILE="vendor"
+        DEVICE_FILE="device"
+    else
+        echo "$1 bus is not supported"
+        return 1
+    fi
+    if [ -z "$2" ] || [ -z "$3" ]; then
+        echo "Need Vendor and Product arguments"
+        return 1
+    fi
+    DEVICES=$(find -L /sys/bus/$1/devices -maxdepth 2 -name $DEVICE_FILE)
+    for file in $DEVICES; do
+        CHECK_DEVICE=$(cat $file)
+        DIRECTORY=$(dirname $file)
+        CHECK_VENDOR=$(cat $DIRECTORY/$VENDOR_FILE)
+        if [ "$CHECK_VENDOR" != "$2" ] && [ "$CHECK_VENDOR" != "0x$2" ]; then
+            continue
+        fi
+        if [ "$CHECK_DEVICE" = "$3" ] || [ "$CHECK_DEVICE" = "0x$3" ]; then
+            return 0
+        fi
+    done
+    return 1
+}
+

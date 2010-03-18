@@ -1,13 +1,12 @@
 #!/bin/sh
 #
-#       <bootstrap.sh>
+#       <emergency.sh>
 #
-#       Loads the ubiquity dell bootstrap plugin into place
+#       Applies any emergency fixes for the installer that couldn't be fixed
+#       upstream at this time
 #
-#       Copyright 2008-2010 Dell Inc.
+#       Copyright 2010 Dell Inc.
 #           Mario Limonciello <Mario_Limonciello@Dell.com>
-#           Hatim Amro <Hatim_Amro@Dell.com>
-#           Michael E Brown <Michael_E_Brown@Dell.com>
 #
 #       This program is free software; you can redistribute it and/or modify
 #       it under the terms of the GNU General Public License as published by
@@ -25,18 +24,5 @@
 #       MA 02110-1301, USA.
 # vim:ts=8:sw=8:et:tw=0
 
-#Build pool (so we know which version we need)
-chroot /root /cdrom/scripts/pool.sh
-
-#shows our bootstrap page
-chroot /root apt-get install dell-recovery -y
-
-#only if we are in factory or bto-a
-if chroot /root apt-cache show fist 2>/dev/null 1>/dev/null; then
-    chroot /root apt-get install fist -y
-fi
-
-#Emergency installer fixes
-if [ -e /root/cdrom/scripts/emergency.sh ]; then
-    . /root/cdrom/scripts/emergency.sh
-fi
+#See https://bugs.launchpad.net/bugs/532961 for more details
+sed -i "s/if\ priority\ ==\ 'critical'/from ubiquity import misc\n\ \ \ \ \ \ \ \ \ \ \ \ misc.execute_root\('partx',\ '-a',\ '\/dev\/sda'\)\n\ \ \ \ \ \ \ \ \ \ \ \ return\ True\n\ \ \ \ \ \ \ \ \ \ \ \ if\ priority\ ==\ 'critical'/" /root/usr/lib/ubiquity/ubiquity/components/partman_commit.py

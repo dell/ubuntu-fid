@@ -34,9 +34,11 @@ if [ "$BOOTDEV" = "$TARGETDEV" ]; then
     #Sets the active partition to the newly installed partition
     #as a last step, in the event of a possible power outage
     sfdisk -A$BOOT_PART_NUM $BOOTDEV
-else
-    IFHALT "Reverse CDROM Pool due to lack of RP on target"
+fi
+
+if [ "$BOOTDEV" != "$TARGETDEV" ] || ! which ubiquity >/dev/null; then
+    IFHALT "Reverse CDROM Pool due to lack of RP or oem-config on target"
     #If the bootdev and targetdev aren't the same but we made
-    #it this far, then this must be a system w/o an RP.
+    #it this far, then this must be a system w/o an RP or ubiquity
     rm -f /etc/apt/sources.list.d/dell.list
 fi

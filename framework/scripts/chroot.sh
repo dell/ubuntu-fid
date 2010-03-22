@@ -48,8 +48,7 @@ if [ -d "$TARGET/$LOG" ]; then
     chroot $TARGET chattr +a $LOG/chroot.sh.log
 else
     export TARGET=/
-    exec > $LOG/chroot.sh.log 2>&1
-    chattr +a $LOG/chroot.sh.log
+    exec > $TARGET/$LOG/chroot.sh.log 2>&1
 fi
 
 # Nobulate Here.

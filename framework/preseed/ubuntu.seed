@@ -86,8 +86,8 @@
  # We are letting partman pick the largest amount of space
   d-i partman-auto/init_automatically_partition select biggest_free
 
- # Install to the first boot drive
-  d-i partman-auto/disk string /dev/disk/by-id/edd-int13_dev80
+ # Install to drive
+  d-i partman-auto/disk string dynamic
 
  # Provide an expert recipe because the default recipe will make all
  # logical partitions

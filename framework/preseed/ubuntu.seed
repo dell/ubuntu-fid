@@ -145,11 +145,6 @@
   d-i finish-install/reboot_in_progress note
   ubiquity ubiquity/summary note
 
- # Preload language packages
- # These are all included on the DVD already in a preinstalled format.
- # We *save* time by letting them all stay preinstalled
-  d-i pkgsel/language-packs string ALL
-
  # Don't show incomplete language support message
   d-i pkgsel/ignore-incomplete-language-support boolean true
 

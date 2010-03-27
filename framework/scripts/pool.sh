@@ -24,12 +24,14 @@
 #       MA 02110-1301, USA.
 # vim:ts=8:sw=8:et:tw=0
 
-cd /cdrom
+[ -d /cdrom/debs ]
+cd /cdrom/debs
 
-apt-ftparchive packages ../cdrom | sed "s/^Filename:\ ..\//Filename:\ .\//" > /Packages
+apt-ftparchive packages ../../cdrom/debs | sed "s/^Filename:\ ..\//Filename:\ .\//" > /Packages
 
 mv /etc/apt/sources.list /etc/apt/sources.list.ubuntu
 echo "deb file:/ /" > /etc/apt/sources.list.d/dell.list
+grep "^deb cdrom" /etc/apt/sources.list.ubuntu >> /etc/apt/sources.list.d/dell.list
 
 cat > /etc/apt/apt.conf.d/00AllowUnauthenticated << EOF
 APT::Get::AllowUnauthenticated "true";

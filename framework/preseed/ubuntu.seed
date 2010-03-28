@@ -36,7 +36,7 @@
 ### Localization
 
  # Locale sets language and country.
-  d-i debian-installer/locale string en_US.UTF-8
+  d-i debian-installer/locale string C
 
  # Keyboard selection.
   d-i console-setup/layoutcode string us
@@ -64,15 +64,7 @@
   d-i netcfg/get_hostname string dell-desktop
   d-i netcfg/get_domain string
 
-### Mirror settings
-
- # default mirror for install
-  d-i mirror/country string us
-  d-i mirror/http/hostname string archive.ubuntu.com
-  d-i mirror/http/directory string /ubuntu
-  d-i mirror/http/proxy string
-
- # apt stuff (prevent install-time hang)
+### APT stuff
   d-i apt-setup/use_mirror boolean true
   d-i apt-setup/security_host string
   d-i apt-setup/partner boolean true

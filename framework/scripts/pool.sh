@@ -39,5 +39,10 @@ Aptitude::CmdLine::Ignore-Trust-Violations "true";
 EOF
 
 apt-get update
+
+#choose-mirror might not have picked a good mirror to start with
+sed -i "s/http:\/\/.*.archive.ubuntu.com/http:\/\/archive.ubuntu.com/" /etc/apt/sources.list.ubuntu
+
+#cleanup
 mv /etc/apt/sources.list.ubuntu /etc/apt/sources.list
 rm -f /Packages

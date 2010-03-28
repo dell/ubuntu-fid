@@ -427,10 +427,6 @@
     } { pop } ifelse
   } if
 
-  timeout.hidden {
-    "dell-recovery/recovery_type=dvd automatic-ubiquity " bc.cmd dup length add sprintf
-  } if
-
   bc.cmd dropspaces
 
   debug 3 ge {

@@ -116,9 +116,12 @@ class ProcessJockey():
             exit(code)
 
 if __name__ == "__main__":
-    processor = ProcessJockey()
-    drivers = processor.check_need_injection()
-    if len(drivers) > 0:
-        tmp_dir = tempfile.mkdtemp()
-        processor.install_new_aliases(drivers)
-    processor.find_and_install_drivers()
+    if os.path.exists('/usr/share/jockey/jockey-backend'):
+        processor = ProcessJockey()
+        drivers = processor.check_need_injection()
+        if len(drivers) > 0:
+            tmp_dir = tempfile.mkdtemp()
+            processor.install_new_aliases(drivers)
+        processor.find_and_install_drivers()
+    else:
+        print "Jockey isn't installed on target.  Unable to detect drivers"

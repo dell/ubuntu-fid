@@ -14,7 +14,8 @@
 /.fulloptions.edd_on 4 def
 /.fulloptions.nodmraid 5 def
 /.fulloptions.nomodeset 6 def
-/.fulloptions.free 7 def
+/.fulloptions.ntfs 7 def
+/.fulloptions.kexec 8 def
 
 % These strings are intentionally not translatable.
 /txt_acpi_off "acpi=off" def
@@ -23,7 +24,8 @@
 /txt_edd_on "edd=on" def
 /txt_nodmraid "nodmraid" def
 /txt_nomodeset "nomodeset" def
-
+/txt_ntfs "Use NTFS for RP" def
+/txt_kexec "Use kexec to reboot" def
 
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 % Initialise boot options menu.
@@ -41,7 +43,8 @@
     /.fulloptions.edd_on dec
     /.fulloptions.nodmraid dec
     /.fulloptions.nomodeset dec
-    /.fulloptions.free dec
+    /.fulloptions.ntfs dec
+    /.fulloptions.kexec dec
     xmenu .xm_current .fulloptions.acpi_off put
   } {
     xmenu .xm_current .fulloptions.expert put
@@ -51,7 +54,8 @@
     is_live not { /txt_expert_mode } if
     /txt_acpi_off /txt_noapic /txt_nolapic /txt_edd_on /txt_nodmraid
     /txt_nomodeset
-    /txt_option_free
+    /txt_ntfs
+    /txt_kexec
   ] put
 
   xmenu .xm_title /txt_other_options put
@@ -86,7 +90,8 @@
       over .fulloptions.edd_on eq { pop "edd=on" } if
       over .fulloptions.nodmraid eq { pop "nodmraid" } if
       over .fulloptions.nomodeset eq { pop "nomodeset" } if
-      over .fulloptions.free eq { pop "apt-setup/restricted=false apt-setup/multiverse=false" } if
+      over .fulloptions.ntfs eq { pop "dell-recovery/recovery_partition_filesystem=07" } if
+      over .fulloptions.kexec eq { pop "dell-recovery/kexec=true" } if
       dup {
 	% append new option string
 	dup length fulloptions.option length add 1 add string

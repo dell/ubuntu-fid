@@ -101,6 +101,18 @@ class ProcessJockey():
 
         #Install any detected drivers
         if len(install) > 0:
+            #Disable modprobe during installation
+            modprobe = '/sbin/modprobe'
+            os.rename(modprobe, '%s.REAL' % modprobe)
+            with open(modprobe, 'w') as f:
+                print >>f, """\
+#!/bin/sh
+echo 1>&2
+echo 'Warning: Fake modprobe called, doing nothing.' 1>&2
+exit 0"""
+            os.chmod(modprobe, 0755)
+
+            #Perform installation
             for item in install:
                 print "Installing: %s" % item
                 ret = subprocess.Popen(["jockey-text", "-e", item, "-m", "nonfree"],stdout=subprocess.PIPE)
@@ -108,6 +120,9 @@ class ProcessJockey():
                 code = ret.wait()
                 if (code != 0):
                     print "Error installing: %s" % item
+
+            #Re-enable modprobe
+            os.rename('%s.REAL' % modprobe, modprobe)
         else:
             print "No Jockey supported drivers necessary"
 

@@ -25,7 +25,7 @@
 #       MA 02110-1301, USA.
 # vim:ts=8:sw=8:et:tw=0
 
-#Build pool (so we know which version we need)
+#Build custom pool (static and dynamic)
 chroot /root /cdrom/scripts/pool.sh
 
 #shows our bootstrap page

@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-#       <buildpool.sh>
+#       <pool.sh>
 #
 #       Builds a pool from important stuff in /cdrom
 #       * Expects to be called as root w/ /cdrom referring to our stuff
@@ -25,24 +25,55 @@
 # vim:ts=8:sw=8:et:tw=0
 
 [ -d /cdrom/debs ]
-cd /cdrom/debs
 
-apt-ftparchive packages ../../cdrom/debs | sed "s/^Filename:\ ..\//Filename:\ .\//" > /Packages
-
-mv /etc/apt/sources.list /etc/apt/sources.list.ubuntu
-echo "deb file:/ /" > /etc/apt/sources.list.d/dell.list
-grep "^deb cdrom" /etc/apt/sources.list.ubuntu >> /etc/apt/sources.list.d/dell.list
-
-cat > /etc/apt/apt.conf.d/00AllowUnauthenticated << EOF
+#This allows things that aren't signed to be installed
+if [ ! -f /etc/apt/apt.conf.d/00AllowUnauthenticated ]; then
+    cat > /etc/apt/apt.conf.d/00AllowUnauthenticated << EOF
 APT::Get::AllowUnauthenticated "true";
 Aptitude::CmdLine::Ignore-Trust-Violations "true";
 EOF
+fi
 
-apt-get update
+#Prevents apt-get from complaining about unmounting and mounting the hard disk
+if [ ! -f /etc/apt/apt.conf.d/00NoMountCDROM ]; then
+    cat > /etc/apt/apt.conf.d/00NoMountCDROM << EOF
+APT::CDROM::NoMount "true";
+Acquire::cdrom 
+{
+    mount "/cdrom";
+    "/cdrom/" 
+    {
+        Mount  "true";
+        UMount "true";
+    };
+    AutoDetect "false";
+};
+EOF
+fi
 
 #choose-mirror might not have picked a good mirror to start with
-sed -i "s/http:\/\/.*.archive.ubuntu.com/http:\/\/archive.ubuntu.com/" /etc/apt/sources.list.ubuntu
+sed -i "s/http:\/\/.*.archive.ubuntu.com/http:\/\/archive.ubuntu.com/" /etc/apt/sources.list
 
-#cleanup
-mv /etc/apt/sources.list.ubuntu /etc/apt/sources.list
-rm -f /Packages
+if [ ! -f /etc/apt/sources.list.d/dell.list ]; then
+    #Produce a dynamic list
+    cd /cdrom/debs
+    apt-ftparchive packages ../../cdrom/debs | sed "s/^Filename:\ ..\//Filename:\ .\//" > /Packages
+    echo "deb file:/ /" > /etc/apt/sources.list.d/dell.list
+
+    #add the static list to our file
+    apt-cdrom -m add
+    if grep "^deb cdrom" /etc/apt/sources.list >> /etc/apt/sources.list.d/dell.list; then
+        sed -i "/^deb\ cdrom/d" /etc/apt/sources.list
+    fi
+    
+    #fill up the cache
+    mv /etc/apt/sources.list /etc/apt/sources.list.ubuntu
+    apt-get update
+
+    #cleanup
+    mv /etc/apt/sources.list.ubuntu /etc/apt/sources.list
+    rm -f /Packages
+fi
+
+
+

@@ -72,7 +72,7 @@ if [ "\$BOOTDEV" = "\$TARGETDEV" ]; then
 fi
 
 #This will be rebuilt before OEM config
-rm -f /etc/apt/sources.list.d/dell.list
+rm -f \$TARGET/etc/apt/sources.list.d/dell.list
 EOF
 
     #We don't need to set this executable because on FAT32

@@ -87,9 +87,6 @@ if ! mount | grep "$TARGET/media/cdrom"; then
     MOUNT_CLEANUP="$TARGET/cdrom $MOUNT_CLEANUP"
 fi
 
-#Double check that we have a valid pool
-chroot $TARGET /cdrom/scripts/pool.sh
-
 #Run chroot scripts
 chroot $TARGET /cdrom/scripts/chroot-scripts/run_chroot
 

@@ -52,6 +52,7 @@ EOF
 fi
 
 #choose-mirror might not have picked a good mirror to start with
+#https://bugs.launchpad.net/ubuntu/+source/choose-mirror/+bug/550694
 sed -i "s/http:\/\/.*.archive.ubuntu.com/http:\/\/archive.ubuntu.com/" /etc/apt/sources.list
 
 if [ ! -f /etc/apt/sources.list.d/dell.list ]; then
@@ -65,7 +66,7 @@ if [ ! -f /etc/apt/sources.list.d/dell.list ]; then
     if grep "^deb cdrom" /etc/apt/sources.list >> /etc/apt/sources.list.d/dell.list; then
         sed -i "/^deb\ cdrom/d" /etc/apt/sources.list
     fi
-    
+
     #fill up the cache
     mv /etc/apt/sources.list /etc/apt/sources.list.ubuntu
     apt-get update

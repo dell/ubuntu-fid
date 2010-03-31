@@ -1,0 +1,40 @@
+#
+#       <dual.seed>
+#
+#       Dell dual-boot preseed that stacks on ubuntu.seed
+#        * Last updated for Ubuntu 10.04
+#
+#       Copyright 2010 Dell Inc.
+#           Mario Limonciello <Mario_Limonciello@Dell.com>
+#
+#       This program is free software; you can redistribute it and/or modify
+#       it under the terms of the GNU General Public License as published by
+#       the Free Software Foundation; either version 2 of the License, or
+#       (at your option) any later version.
+#
+#       This program is distributed in the hope that it will be useful,
+#       but WITHOUT ANY WARRANTY; without even the implied warranty of
+#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#       GNU General Public License for more details.
+#
+#       You should have received a copy of the GNU General Public License
+#       along with this program; if not, write to the Free Software
+#       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+#       MA 02110-1301, USA.
+
+#Special dual boot partitioning
+ d-i partman-auto/expert_recipe string \
+                                       \
+   dell ::                             \
+                                       \
+       500 10000 1000000 ext4          \
+       $primary{ }                     \
+       method{ format }                \
+       format{ }                       \
+       use_filesystem{ }               \
+       filesystem{ ext4 }              \
+       mountpoint{ / } .               
+
+### Dell Factory Process specific
+ d-i dell-recovery/os_partition string 4
+ d-i dell-recovery/swap_partition string

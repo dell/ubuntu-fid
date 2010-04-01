@@ -96,6 +96,9 @@ EOF
         /dell/fist/tal PutFiles /tmp/fist.log
         rm -rf /cdrom/debs/fist
     fi
+else
+    #This will be rebuilt before OEM config
+    rm -f $TARGET/etc/apt/sources.list.d/dell.list
 fi
 
 IFHALT "(SUCCESS) Report to logs.. Done!"

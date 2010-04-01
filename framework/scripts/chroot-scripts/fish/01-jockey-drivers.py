@@ -102,15 +102,17 @@ class ProcessJockey():
         #Install any detected drivers
         if len(install) > 0:
             #Disable modprobe during installation
-            modprobe = '/sbin/modprobe'
-            os.rename(modprobe, '%s.REAL' % modprobe)
-            with open(modprobe, 'w') as f:
-                print >>f, """\
-#!/bin/sh
-echo 1>&2
-echo 'Warning: Fake modprobe called, doing nothing.' 1>&2
-exit 0"""
-            os.chmod(modprobe, 0755)
+            fake_binaries = ['/sbin/modprobe',
+                             '/usr/sbin/update-initramfs']
+            for binary in fake_binaries:
+                os.rename(binary, '%s.REAL' % binary)
+                with open(binary, 'w') as f:
+                    print >>f, """\
+    #!/bin/sh
+    echo 1>&2
+    echo 'Warning: Fake %s called, doing nothing.' 1>&2
+    exit 0""" % binary
+                os.chmod(binary, 0755)
 
             #Perform installation
             for item in install:
@@ -121,8 +123,16 @@ exit 0"""
                 if (code != 0):
                     print "Error installing: %s" % item
 
-            #Re-enable modprobe
-            os.rename('%s.REAL' % modprobe, modprobe)
+            #Re-enable fake binaries
+            for binary in fake_binaries:
+                os.rename('%s.REAL' % binary, binary)
+            #Update initramfs now
+            ret = subprocess.Popen(["update-initramfs", "-u"],stdout=subprocess.PIPE)
+            output = ret.communicate()[0]
+            code = ret.wait()
+            if (code != 0):
+                print "Error updating initramfs"
+
         else:
             print "No Jockey supported drivers necessary"
 

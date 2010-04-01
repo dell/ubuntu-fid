@@ -17,6 +17,7 @@
 /.fulloptions.ntfs 7 def
 /.fulloptions.kexec 8 def
 /.fulloptions.fglrx 9 def
+/.fulloptions.dual 10 def
 
 % These strings are intentionally not translatable.
 /txt_acpi_off "acpi=off" def
@@ -28,6 +29,7 @@
 /txt_ntfs "Use NTFS for RP" def
 /txt_kexec "Use kexec to reboot" def
 /txt_fglrx "Disable fglrx driver" def
+/txt_dual "Enable dual seed" def
 
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 % Initialise boot options menu.
@@ -48,6 +50,7 @@
     /.fulloptions.ntfs dec
     /.fulloptions.kexec dec
     /.fulloptions.fglrx dec
+    /.fulloptions.dual dec
     xmenu .xm_current .fulloptions.acpi_off put
   } {
     xmenu .xm_current .fulloptions.expert put
@@ -60,6 +63,7 @@
     /txt_ntfs
     /txt_kexec
     /txt_fglrx
+    /txt_dual
   ] put
 
   xmenu .xm_title /txt_other_options put
@@ -97,6 +101,7 @@
       over .fulloptions.ntfs eq { pop "dell-recovery/recovery_partition_filesystem=07" } if
       over .fulloptions.kexec eq { pop "dell-recovery/kexec=true" } if
       over .fulloptions.fglrx eq { pop "dell-recovery/disable-driver-install=fglrx" } if
+      over .fulloptions.dual eq { pop "dell-recovery/dual_boot_seed=preseed/file=/cdrom/preseed/dual.seed" } if
       dup {
 	% append new option string
 	dup length fulloptions.option length add 1 add string

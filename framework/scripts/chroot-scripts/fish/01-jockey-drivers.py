@@ -108,10 +108,10 @@ class ProcessJockey():
                 os.rename(binary, '%s.REAL' % binary)
                 with open(binary, 'w') as f:
                     print >>f, """\
-    #!/bin/sh
-    echo 1>&2
-    echo 'Warning: Fake %s called, doing nothing.' 1>&2
-    exit 0""" % binary
+#!/bin/sh
+echo 1>&2
+echo 'Warning: Fake %s called, doing nothing.' 1>&2
+exit 0""" % binary
                 os.chmod(binary, 0755)
 
             #Perform installation

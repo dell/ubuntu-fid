@@ -130,6 +130,7 @@
   d-i oem-config/early_command string dynamic
   d-i oem-config/late_command string rm -f /etc/apt/sources.list.d/dell.list
   d-i oem-config/remove_extras boolean true
+  d-i oem-config/install-language-support boolean true
 
 ### Package selection
 

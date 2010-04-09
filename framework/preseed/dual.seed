@@ -35,9 +35,6 @@
        filesystem{ ext4 }              \
        mountpoint{ / } .               
 
-#We want to show other OSes too
- d-i grub-installer/with_other_os boolean true
-
 ### Dell Factory Process specific
 #These control what partitions are deleted initially
  d-i dell-recovery/os_partition string 4

@@ -27,78 +27,25 @@
 # BE AWARE THAT THIS SCRIPT IS CALLED FROM OUTSIDE THE CHROOT.
 # The OS is mounted under $TARGET
 
-. /cdrom/scripts/chroot-scripts/fifuncs "target"
+. /usr/share/dell/scripts/fifuncs "target"
 
 set -x
 set -e
 
-if [ "$BOOTDEV" = "$TARGETDEV" ]; then
-    mount -o remount,rw /cdrom
+IFHALT "Clean up FI Env..."
+rm -rf /cdrom/scripts/chroot-scripts/os-post/95-set_UTC_TZ.sh
+rm -rf /cdrom/misc/run-tz-fix
+rm -rf /cdrom/misc/tz_offset.py
+rm -rf /cdrom/command.com
+rm -rf /cdrom/autoexec.bat
+rm -rf /cdrom/dellbio.bin
+rm -rf /cdrom/dellrmk.bin
+rm -rf /cdrom/linld.com
+rm -rf /cdrom/cmd.cfg
 
-    IFHALT "Clean up FID FAIL & SUCCESS scripts..."
-    rm -rf /cdrom/scripts/chroot-scripts/FAIL-SCRIPT
-    cat > /cdrom/scripts/chroot-scripts/FAIL-SCRIPT << EOF
-. /cdrom/scripts/chroot-scripts/fifuncs "target"
-set -x
-
-IFHALT "(FAIL) Clean-Up & Report FI logs ..."
-
-if [ "\$BOOTDEV" = "\$TARGETDEV" ]; then
-    mount -o remount,rw /cdrom
-
-    IFHALT "Resetting grub fail state"
-    [ -s /cdrom/grub/grubenv ] || rm -f /cdrom/grub/grubenv
-    mkdir -p /cdrom/grub
-    grub-editenv /cdrom/grub/grubenv set recordfail=1
+IFHALT "Report the LOG..."
+if [ -f /dell/fist/tal ]; then
+    cp $TARGET/$LOG/chroot.sh.log /tmp/fist.log
+    /dell/fist/tal PutFiles /tmp/fist.log
+    rm -rf /cdrom/debs/fist
 fi
-EOF
-
-    rm -rf /cdrom/scripts/chroot-scripts/SUCCESS-SCRIPT
-    cat > /cdrom/scripts/chroot-scripts/SUCCESS-SCRIPT << EOF
-. /cdrom/scripts/chroot-scripts/fifuncs "target"
-set -x
-
-IFHALT "(SUCCESS) Clean-Up and Report FI logs ..."
-
-chroot $TARGET chattr -a $LOG/chroot.sh.log
-
-if [ "\$BOOTDEV" = "\$TARGETDEV" ]; then
-    mount -o remount,rw /cdrom
-
-    IFHALT "Resetting grub fail state"
-    [ -s /cdrom/grub/grubenv ] || rm -f /cdrom/grub/grubenv
-    mkdir -p /cdrom/grub
-    grub-editenv /cdrom/grub/grubenv unset recordfail
-fi
-
-#This will be rebuilt before OEM config
-rm -f \$TARGET/etc/apt/sources.list.d/dell.list
-EOF
-
-    #We don't need to set this executable because on FAT32
-    #everything is already executable
-    /cdrom/scripts/chroot-scripts/SUCCESS-SCRIPT
-
-    IFHALT "Clean up FI Env..."
-    rm -rf /cdrom/scripts/chroot-scripts/os-post/95-set_UTC_TZ.sh
-    rm -rf /cdrom/misc/run-tz-fix
-    rm -rf /cdrom/misc/tz_offset.py
-    rm -rf /cdrom/command.com
-    rm -rf /cdrom/autoexec.bat
-    rm -rf /cdrom/dellbio.bin
-    rm -rf /cdrom/dellrmk.bin
-    rm -rf /cdrom/linld.com
-    rm -rf /cdrom/cmd.cfg
-
-    IFHALT "Report the LOG... If applicable"
-    if [ -f /dell/fist/tal ]; then
-        cp $TARGET/$LOG/chroot.sh.log /tmp/fist.log
-        /dell/fist/tal PutFiles /tmp/fist.log
-        rm -rf /cdrom/debs/fist
-    fi
-else
-    #This will be rebuilt before OEM config
-    rm -f $TARGET/etc/apt/sources.list.d/dell.list
-fi
-
-IFHALT "(SUCCESS) Report to logs.. Done!"

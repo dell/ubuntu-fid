@@ -24,7 +24,7 @@
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
 
-. /cdrom/scripts/chroot-scripts/fifuncs ""
+. /usr/share/dell/scripts/fifuncs ""
 
 IFHALT "Copying Vendor Documents..."
 

@@ -103,7 +103,8 @@ class ProcessJockey():
         if len(install) > 0:
             #Disable modprobe during installation
             fake_binaries = ['/sbin/modprobe',
-                             '/usr/sbin/update-initramfs']
+                             '/usr/sbin/update-initramfs',
+                             '/sbin/modinfo']
             for binary in fake_binaries:
                 os.rename(binary, '%s.REAL' % binary)
                 with open(binary, 'w') as f:

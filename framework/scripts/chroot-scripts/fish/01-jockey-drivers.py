@@ -31,38 +31,50 @@ import os
 import apt
 import sys
 import tempfile
-import apt.cdrom
 import atexit
-import aptsources.sourceslist
-import shutil
+from apt.progress import InstallProgress
+from apt.cache import Cache
+
+class TextInstallProgress(InstallProgress):
+    
+    def __init__(self):
+        apt.progress.InstallProgress.__init__(self)
+        self.last = 0.0
+
+    def updateInterface(self):
+        InstallProgress.updateInterface(self)
+        if self.last >= self.percent:
+            return
+        sys.stdout.write("\r[%s] %s\n" %(self.percent, self.status))
+        sys.stdout.flush()
+        self.last = self.percent
+
+    def conffile(self, current, new):
+        print "conffile prompt: %s %s" % (current, new)
+    
+    def error(self, errorstr):
+        print "got dpkg error: '%s'" % errorstr
+
 
 class ProcessJockey():
 
-    def __init__(self):
-        self.driver_root = '/cdrom/debs'
-        self.supported_drivers = ['nvidia', 'fglrx', 'bcmwl']
-
-    def check_need_injection(self):
-        '''Determine what drivers need to be injected into the pool'''
-        drivers = []
-        for item in self.supported_drivers:
-            if os.path.exists(os.path.join(self.driver_root,item)):
-                drivers.append(item)
-        return drivers
-
-    def install_new_aliases(self,drivers):
+    def install_new_aliases(self):
         '''If new modaliases are available, install them right now
            so that they will be available to Jockey later in the process'''
-        for driver in drivers:
-            for item in os.listdir(os.path.join(self.driver_root,driver)):
-                if 'modalias' in item:
-                    ret = subprocess.Popen(['dpkg', '-i', os.path.join(self.driver_root,driver,item)], stdout=subprocess.PIPE)
-                    output = ret.communicate()[0]
-                    print output
-                    code = ret.wait()
-                    if (code != 0):
-                        print "Failed to install modaliases package: " + item 
-                        exit(code)
+        cache = Cache()
+        fprogress = apt.progress.TextFetchProgress()
+        iprogress = TextInstallProgress()
+        
+        for pkg in cache.keys():
+            if '-modaliases' in pkg and \
+                cache[pkg].is_installed and \
+                cache[pkg].is_upgradable:
+                print "Marking %s for upgrade" % pkg
+                cache[pkg].mark_install()
+        
+        res = cache.commit(fprogress, iprogress)
+        print res
+        del cache
 
     def find_and_install_drivers(self):
         '''Uses jockey to detect and install necessary drivers'''
@@ -144,10 +156,7 @@ exit 0""" % binary
 if __name__ == "__main__":
     if os.path.exists('/usr/share/jockey/jockey-backend'):
         processor = ProcessJockey()
-        drivers = processor.check_need_injection()
-        if len(drivers) > 0:
-            tmp_dir = tempfile.mkdtemp()
-            processor.install_new_aliases(drivers)
+        processor.install_new_aliases()
         processor.find_and_install_drivers()
     else:
         print "Jockey isn't installed on target.  Unable to detect drivers"

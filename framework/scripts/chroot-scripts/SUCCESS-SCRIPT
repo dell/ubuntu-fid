@@ -49,6 +49,7 @@ rm -rf /cdrom/upimg.bin
 rm -rf /cdrom/upimg.gz
 rm -rf /cdrom/SDR
 rm -rf /cdrom/*.SDR
+rm -rf /cdrom/srv
 
 IFHALT "Report the LOG..."
 if [ -f /dell/fist/tal ]; then

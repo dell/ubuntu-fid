@@ -80,8 +80,8 @@ class ProcessJockey():
         '''Uses jockey to detect and install necessary drivers'''
 
         #If we installed in a different language, this might actually not be working properly otherwise
-        os.environ['LANG'] = C
-        os.environ['LANGUAGE'] = C
+        os.environ['LANG'] = 'C'
+        os.environ['LANGUAGE'] = 'C'
 
         #spawn jockey backend inside the chroot (if we let service activation do it, it would be outside the chroot)
         backend = subprocess.Popen(["/usr/share/jockey/jockey-backend"])

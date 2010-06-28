@@ -95,7 +95,7 @@
        filesystem{ ext4 }              \
        mountpoint{ / } .               \
                                        \
-       64 512 100% linux-swap          \
+       105% 150% 200% linux-swap       \
        method{ swap }                  \
        format{ }                       \
        .

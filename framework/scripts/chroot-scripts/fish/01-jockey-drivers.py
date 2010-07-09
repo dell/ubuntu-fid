@@ -35,6 +35,8 @@ import atexit
 from apt.progress import InstallProgress
 from apt.cache import Cache
 
+DONT_BUILD_DKMS_FILE = "/tmp/do_not_build_dkms_module"
+
 class TextInstallProgress(InstallProgress):
     
     def __init__(self):
@@ -134,11 +136,16 @@ exit 0""" % binary
             #Perform installation
             for item in install:
                 print "Installing: %s" % item
+                if item == "xorg:fglrx":
+                    with open(DONT_BUILD_DKMS_FILE,'w'):
+                        pass
                 ret = subprocess.Popen(["jockey-text", "-e", item, "-m", "nonfree"],stdout=subprocess.PIPE)
                 output = ret.communicate()[0]
                 code = ret.wait()
                 if (code != 0):
                     print "Error installing: %s" % item
+                if os.path.exists(DONT_BUILD_DKMS_FILE):
+                    os.remove(DONT_BUILD_DKMS_FILE)
 
             #Re-enable fake binaries
             for binary in fake_binaries:

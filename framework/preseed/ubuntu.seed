@@ -135,6 +135,8 @@
 ### Package selection
 
 # General stuff
+
+ ubiquity ubiquity/custom_title_text Dell Recovery
  tasksel tasksel/first multiselect ubuntu-desktop
  d-i finish-install/reboot_in_progress note
  ubiquity ubiquity/summary note

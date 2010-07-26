@@ -34,6 +34,7 @@ set -e
 
 IFHALT "Clean up FI Env..."
 rm -rf /cdrom/scripts/chroot-scripts/os-post/95-set_UTC_TZ.sh
+rm -rf /cdrom/misc/dell-unsupported.py
 rm -rf /cdrom/misc/run-tz-fix
 rm -rf /cdrom/misc/tz_offset.py
 rm -rf /cdrom/misc/drmk.zip

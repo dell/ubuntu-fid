@@ -34,6 +34,16 @@ chroot /root apt-get install dell-recovery -y
 #only if we are in factory or bto-a
 if chroot /root apt-cache show fist 2>/dev/null 1>/dev/null; then
     chroot /root apt-get install fist -y
+else
+#recovery media or hand install - double check dell-recovery version
+#if we have a version targeted at a different ubuntu release, show a warning
+    our_os_version=$(cat /root/etc/lsb-release | grep CODENAME | awk -F'=' '{ print $2 }')
+    dell_recovery_os_version=$(zcat /root/usr/share/doc/dell-recovery/changelog.gz | /root/usr/bin/head -n 1)
+    if [ -f /root/cdrom/misc/dell-unsupported.py ] && \
+       echo $dell_recovery_os_version | grep -v $our_os_version >/dev/null && \
+       grep "dell-recovery/recovery_type" /proc/cmdline >/dev/null; then
+        cp /root/cdrom/misc/dell-unsupported.py /root/usr/lib/ubiquity/plugins
+    fi
 fi
 
 #Emergency installer fixes

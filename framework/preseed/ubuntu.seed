@@ -136,7 +136,7 @@
 
 # General stuff
 
- ubiquity ubiquity/custom_title_text Dell Recovery
+ ubiquity ubiquity/custom_title_text string Dell Recovery
  tasksel tasksel/first multiselect ubuntu-desktop
  d-i finish-install/reboot_in_progress note
  ubiquity ubiquity/summary note

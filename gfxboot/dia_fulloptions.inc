@@ -14,11 +14,6 @@
 /.fulloptions.edd_on 4 def
 /.fulloptions.nodmraid 5 def
 /.fulloptions.nomodeset 6 def
-/.fulloptions.ntfs 7 def
-/.fulloptions.gpt 8 def
-/.fulloptions.fglrx 9 def
-/.fulloptions.dual 10 def
-/.fulloptions.active 11 def
 
 % These strings are intentionally not translatable.
 /txt_acpi_off "acpi=off" def
@@ -27,11 +22,6 @@
 /txt_edd_on "edd=on" def
 /txt_nodmraid "nodmraid" def
 /txt_nomodeset "nomodeset" def
-/txt_ntfs "Use NTFS for RP" def
-/txt_gpt "Force GPT layout" def
-/txt_fglrx "Disable fglrx driver" def
-/txt_dual "Enable dual seed" def
-/txt_active "Set p2 active" def
 
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 % Initialise boot options menu.
@@ -49,11 +39,6 @@
     /.fulloptions.edd_on dec
     /.fulloptions.nodmraid dec
     /.fulloptions.nomodeset dec
-    /.fulloptions.ntfs dec
-    /.fulloptions.gpt dec
-    /.fulloptions.fglrx dec
-    /.fulloptions.dual dec
-    /.fulloptions.active dec
     xmenu .xm_current .fulloptions.acpi_off put
   } {
     xmenu .xm_current .fulloptions.expert put
@@ -63,11 +48,6 @@
     is_live not { /txt_expert_mode } if
     /txt_acpi_off /txt_noapic /txt_nolapic /txt_edd_on /txt_nodmraid
     /txt_nomodeset
-    /txt_ntfs
-    /txt_gpt
-    /txt_fglrx
-    /txt_dual
-    /txt_active
   ] put
 
   xmenu .xm_title /txt_other_options put
@@ -102,11 +82,6 @@
       over .fulloptions.edd_on eq { pop "edd=on" } if
       over .fulloptions.nodmraid eq { pop "nodmraid" } if
       over .fulloptions.nomodeset eq { pop "nomodeset" } if
-      over .fulloptions.ntfs eq { pop "dell-recovery/recovery_partition_filesystem=07" } if
-      over .fulloptions.gpt eq { pop "dell-recovery/disk_layout=gpt" } if
-      over .fulloptions.fglrx eq { pop "dell-recovery/disable-driver-install=fglrx" } if
-      over .fulloptions.dual eq { pop "dell-recovery/dual_boot_seed=preseed/file=/cdrom/preseed/dual.seed" } if
-      over .fulloptions.active eq { pop "dell-recovery/active_partition=2" } if
       dup {
 	% append new option string
 	dup length fulloptions.option length add 1 add string

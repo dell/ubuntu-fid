@@ -29,7 +29,7 @@
 chroot /root /cdrom/scripts/pool.sh
 
 #shows our bootstrap page
-chroot /root apt-get install dell-recovery -y
+chroot /root apt-get install dell-recovery -y --no-install-recommends
 
 #only if we are in factory or bto-a
 if chroot /root apt-cache show fist 2>/dev/null 1>/dev/null; then

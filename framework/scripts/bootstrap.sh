@@ -46,6 +46,18 @@ else
     fi
 fi
 
+#Install EFI Grub
+if [ -d /sys/firmware/efi ]; then
+    #grub-pc is in livefs, need grub-efi-amd64
+    chroot /root apt-get install grub-efi-amd64 -y
+
+    #currently grub-installer will install grub-efi, which depends on grub-efi-ia32
+    #on 32 bit.   we are only supporting grub-efi-amd64
+    #this hasn't yet been fixed in grub-installer because grub-installer can't
+    #determine which firmware it was booted from, 32-bit or 64-bit
+    sed -i "s/apt-install\ \$grub_package/apt-install\ grub-efi-amd64/" /root/usr/share/grub-installer/grub-installer
+fi
+
 #Emergency installer fixes
 if [ -e /root/cdrom/scripts/emergency.sh ]; then
     . /root/cdrom/scripts/emergency.sh

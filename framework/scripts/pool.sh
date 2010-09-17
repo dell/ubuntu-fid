@@ -51,8 +51,6 @@ Acquire::cdrom
 EOF
 fi
 
-#This was introduced to fix bug 627672, but causes problems for us
-rm -f /etc/apt/apt.conf.d/00IdentCDROM
 
 #choose-mirror might not have picked a good mirror to start with
 #https://bugs.launchpad.net/ubuntu/+source/choose-mirror/+bug/550694

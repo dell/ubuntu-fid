@@ -57,6 +57,11 @@ fi
 sed -i "s/http:\/\/.*.archive.ubuntu.com/http:\/\/archive.ubuntu.com/" /etc/apt/sources.list
 
 if [ ! -f /etc/apt/sources.list.d/dell.list ]; then
+    #extra sources need to be disabled for this
+    if find /etc/apt/sources.list.d/ -type f | grep sources.list.d; then
+        mkdir -p /etc/apt/sources.list.d.old
+        mv /etc/apt/sources.list.d/* /etc/apt/sources.list.d.old
+    fi
     #Produce a dynamic list
     cd /cdrom/debs
     apt-ftparchive packages ../../cdrom/debs | sed "s/^Filename:\ ..\//Filename:\ .\//" > /Packages
@@ -75,6 +80,10 @@ if [ ! -f /etc/apt/sources.list.d/dell.list ]; then
     #cleanup
     mv /etc/apt/sources.list.ubuntu /etc/apt/sources.list
     rm -f /Packages
+    if [ -d /etc/apt/sources.list.d.old ]; then
+        mv /etc/apt/sources.list.d.old/* /etc/apt/sources.list.d
+        rm -rf /etc/apt/sources.list.d.old
+    fi
 fi
 
 
